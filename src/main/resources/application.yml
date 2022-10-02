@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: C##OHGI
+    password: OHGI
+
+
+jwt:
+  secretKey: bWV0YXZzZXJ0ZWFtcGhlb2lueA==
+
+
+logging:
+  level:
+    root: info
