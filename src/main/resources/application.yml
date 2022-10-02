@@ -4,13 +4,18 @@ server:
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521/xe
-    username: C##OHGI
-    password: OHGI
-
+    url: jdbc:oracle:thin:@mtvsdbserver_low?TNS_ADMIN=./src/main/resources/databases/Wallet_mtvsDBServer
+    username: INIT
+    password: Teamphoenix12
 
 jwt:
-  secretKey: bWV0YXZzZXJ0ZWFtcGhlb2lueA==
+  secretKey: asdfjp298pafo1320efqw0udvnh0er0h412r08byfdq9dsvh02143908hfeqwn80fdqs0nfdqs0n412013rq0nqefn08dfas0das730732g86923
+
+mybatis:
+  mapper-locations: mybatis/mappers/*.xml
+  type-aliases-package: com.px.init
+  configuration:
+    map-underscore-to-camel-case: true
 
 
 logging:
