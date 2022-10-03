@@ -78,8 +78,8 @@
         )
         VALUES
         (
-          1, #{memberId}, #{memberPw}
-        , SYSDATE, SYSDATE + 30, #{memberName}
+          SEQ_MB_MEMBER_CODE_PK.nextval, #{memberId}, #{memberPw}
+        , SYSDATE, SYSDATE + 365, #{memberName}
         , SYSDATE, SYSDATE, NULL
         , #{phone}, #{email}
         )
