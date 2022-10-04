@@ -20,7 +20,7 @@ public class MemberDTO implements UserDetails {
     private char isExpiration;
     private Date withdrawalDate;
     private char isWithdrawal;
-    private int phone;
+    private String phone;
     private String email;
     private char isEntMember;
     private List<MemberRoleDTO> memberRole;
@@ -28,7 +28,7 @@ public class MemberDTO implements UserDetails {
     public MemberDTO() {
     }
 
-    public MemberDTO(int memberCodePk, String memberId, String memberPw, String pwIsTemp, Date pwChangedDate, Date pwExpirationDate, String memberName, Date signupDate, Date expirationDate, char isExpiration, Date withdrawalDate, char isWithdrawal, int phone, String email, char isEntMember, List<MemberRoleDTO> memberRole, Collection<? extends GrantedAuthority> authorities) {
+    public MemberDTO(int memberCodePk, String memberId, String memberPw, String pwIsTemp, Date pwChangedDate, Date pwExpirationDate, String memberName, Date signupDate, Date expirationDate, char isExpiration, Date withdrawalDate, char isWithdrawal, String phone, String email, char isEntMember, List<MemberRoleDTO> memberRole, Collection<? extends GrantedAuthority> authorities) {
         this.memberCodePk = memberCodePk;
         this.memberId = memberId;
         this.memberPw = memberPw;
@@ -144,11 +144,11 @@ public class MemberDTO implements UserDetails {
         this.isWithdrawal = isWithdrawal;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
