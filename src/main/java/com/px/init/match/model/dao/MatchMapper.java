@@ -1,8 +1,11 @@
 package com.px.init.match.model.dao;
 
+import com.px.init.match.model.dto.PersonalApplyList;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface MatchMapper {
-    Object selectPersonalApplyList(int memberCode);
+    List<PersonalApplyList> selectPersonalApplyList(int memberCode);
 }

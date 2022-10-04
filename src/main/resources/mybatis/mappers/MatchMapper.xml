@@ -9,7 +9,7 @@
         <result property="career" column="CAREER"/>
         <result property="education" column="EDUCATION"/>
         <result property="entLocation" column="ENT_LOCATION"/>
-        <result property="postStartDAte" column="POST_START_DATE"/>
+        <result property="postStartDate" column="POST_START_DATE"/>
         <result property="comName" column="COM_NAME"/>
         <result property="isAccepted" column="IS_ACCEPTED"/>
     </resultMap>
