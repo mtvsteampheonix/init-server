@@ -41,7 +41,7 @@ public class AuthService {
         log.info("[AuthService] Member Signup Start ==============================");
         memberDTO.setMemberPw(passwordEncoder.encode(memberDTO.getMemberPw()));
         log.info("[AuthService] Member {}", memberDTO);
-        int result = mapper.insertMember(memberDTO);
+        int result = mapper.insertPersonalMember(memberDTO);
         log.info("[AuthService] Member Insert Result {}", result > 0 ? "회원 가입 성공" : "회원 가입 실패");
         log.info("[AuthService] Signup End ==============================");
         return memberDTO;

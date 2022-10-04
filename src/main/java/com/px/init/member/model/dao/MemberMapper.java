@@ -9,6 +9,6 @@ import java.util.Optional;
 @Mapper
 public interface MemberMapper {
     MemberDTO selectMemberByEmail(String email);
-    int insertMember(MemberDTO memberDTO);
+    int insertPersonalMember(MemberDTO memberDTO);
     MemberDTO selectMemberByMemberId(String memberId);
 }
