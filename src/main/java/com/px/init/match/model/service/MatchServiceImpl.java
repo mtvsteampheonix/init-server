@@ -1,7 +1,7 @@
 package com.px.init.match.model.service;
 
 import com.px.init.match.model.dao.MatchMapper;
-import com.px.init.match.model.dto.PersonalApplyList;
+import com.px.init.match.model.dto.PersonalApplyListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<PersonalApplyList> selectPersonalApplyList(int memberCode) {
+    public List<PersonalApplyListDTO> selectPersonalApplyList(int memberCode) {
         return mapper.selectPersonalApplyList(memberCode);
     }
 }

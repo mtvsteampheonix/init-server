@@ -2,7 +2,7 @@ package com.px.init.match.model.dto;
 
 import java.sql.Date;
 
-public class PersonalApplyList {
+public class PersonalApplyListDTO {
     private int noticeCode;
     private String title;
     private String career;
@@ -12,10 +12,10 @@ public class PersonalApplyList {
     private String comName;
     private String isAccepted;
 
-    public PersonalApplyList() {
+    public PersonalApplyListDTO() {
     }
 
-    public PersonalApplyList(int noticeCode, String title, String career, String education, String entLocation, Date postStartDate, String comName, String isAccepted) {
+    public PersonalApplyListDTO(int noticeCode, String title, String career, String education, String entLocation, Date postStartDate, String comName, String isAccepted) {
         this.noticeCode = noticeCode;
         this.title = title;
         this.career = career;

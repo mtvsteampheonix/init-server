@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.px.init.match.model.dao.MatchMapper">
-    <resultMap id="personalApplyList" type="com.px.init.match.model.dto.PersonalApplyList">
+    <resultMap id="personalApplyList" type="com.px.init.match.model.dto.PersonalApplyListDTO">
         <id property="noticeCode" column="NOTICE_CODE_PK"/>
         <result property="title" column="TITLE"/>
         <result property="career" column="CAREER"/>
