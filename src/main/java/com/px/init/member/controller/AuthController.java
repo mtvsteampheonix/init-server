@@ -23,7 +23,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/personal")
     public ResponseEntity<ResponseDTO> signup(@RequestBody MemberDTO memberDTO) throws LoginException {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "회원가입 성공", authService.signup(memberDTO)));
     }
