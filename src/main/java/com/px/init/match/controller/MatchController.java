@@ -19,10 +19,9 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @PostMapping("/personal/apply-list/{memberCode}")
+    @GetMapping("/personal/apply-list/{memberCode}")
     public ResponseEntity<ResponseDTO> selectPersonalApplyList(@PathVariable("memberCode") int memberCode){
         System.out.println("memberCode = " + memberCode);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(memberCode)));
     }
-
 }
