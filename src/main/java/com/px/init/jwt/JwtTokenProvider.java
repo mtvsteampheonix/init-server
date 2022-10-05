@@ -52,7 +52,7 @@ public class JwtTokenProvider{
         memberRoleList.forEach(memberRoleDTO -> roles.add(memberRoleDTO.getAuthority().getAuthorityName()));
 
         Claims claims = Jwts.claims().setSubject(member.getMemberId());
-        claims.put(AUTHORITIES_KEY, roles);
+        claims.put(AUTHORITIES_KEY, roles.get(0));
         claims.put(MEMBER_CODE, member.getMemberCodePk());
 
         long now = (new Date()).getTime();
