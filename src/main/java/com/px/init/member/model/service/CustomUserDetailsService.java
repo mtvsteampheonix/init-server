@@ -16,12 +16,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * <pre>
+ * Class : CustomUserDetailsService
+ * Comment : 스프링 시큐리티 UserDetailsService 구현체
+ * History
+ * 2022-10-05 (손창우) 처음 작성
+ * </pre>
+ *
+ * @author 손창우
+ * @version 1.0
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
     private final MemberMapper mapper;
 
+    /**
+     * Instantiates a new Custom user details service.
+     *
+     * @param mapper the mapper
+     */
     public CustomUserDetailsService(MemberMapper mapper) {
         this.mapper = mapper;
     }

@@ -2,7 +2,7 @@ package com.px.init.member.controller;
 
 import com.px.init.common.dto.ResponseDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.service.AuthService;
+import com.px.init.member.model.service.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ import javax.security.auth.login.LoginException;
 @RestController
 @RequestMapping("/auths")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     /**
      * AuthService DI 생성자
@@ -36,7 +36,7 @@ public class AuthController {
      * @param authService the auth service
      */
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthServiceImpl authService) {
         this.authService = authService;
     }
 
