@@ -58,6 +58,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auths/**").permitAll()
+                .antMatchers("/members/**").permitAll()
+//                .antMatchers("/members/**").hasAnyRole("ADMIN")
+                .antMatchers("**").denyAll()
 
                 .and()
                 .cors()
