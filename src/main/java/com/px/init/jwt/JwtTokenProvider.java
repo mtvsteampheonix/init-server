@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider{
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
     private static final String AUTHORITIES_KEY = "auths";
+    private static final String MEMBER_CODE = "memberCode";
     private static final String BEARER_TYPE = "bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 10; // 10분
 
@@ -52,6 +53,7 @@ public class JwtTokenProvider{
 
         Claims claims = Jwts.claims().setSubject(member.getMemberId());
         claims.put(AUTHORITIES_KEY, roles);
+        claims.put(MEMBER_CODE, member.getMemberCodePk());
 
         long now = (new Date()).getTime();
 
