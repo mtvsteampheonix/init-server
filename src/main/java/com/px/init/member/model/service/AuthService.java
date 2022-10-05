@@ -15,6 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.security.auth.login.LoginException;
 import java.sql.Date;
 
+
+/**
+ * <pre>
+ * Class : Sample
+ * Comment : 어떤 클래스인지 간단한 설명
+ * History
+ * 2022/10/05 (손창우) 처음 작성
+ * </pre>
+ *
+ * @author 손창우
+ * @version 1
+ * @see 참고할class나 외부 url
+ */
 @Service
 public class AuthService {
 
@@ -23,6 +36,13 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
 
+    /**
+     * Instantiates a new Auth service.
+     *
+     * @param mapper          the mapper
+     * @param passwordEncoder the password encoder
+     * @param tokenProvider   the token provider
+     */
     @Autowired
     public AuthService(MemberMapper mapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
         this.mapper = mapper;
@@ -30,6 +50,13 @@ public class AuthService {
         this.tokenProvider = tokenProvider;
     }
 
+    /**
+     * Signup member dto.
+     *
+     * @param memberDTO the member dto
+     * @return the member dto
+     * @throws LoginException the login exception
+     */
     @Transactional
     public MemberDTO signup(MemberDTO memberDTO) throws LoginException {
         log.info("[AuthService] Login START ===================================");
@@ -49,6 +76,13 @@ public class AuthService {
 
     }
 
+    /**
+     * Login token dto.
+     *
+     * @param memberDTO the member dto
+     * @return the token dto
+     * @throws LoginException the login exception
+     */
     @Transactional
     public TokenDTO login(MemberDTO memberDTO) throws LoginException {
         log.info("[AuthService] Login Start ===================================");
@@ -73,6 +107,5 @@ public class AuthService {
 
         log.info("[AuthService] Login End ===================================");
         return token;
-
     }
 }
