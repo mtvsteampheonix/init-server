@@ -28,6 +28,15 @@
           JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
           JOIN TBL_JS_APPLICATION C ON (A.NOTICE_CODE_PK = C.NOTICE_CODE_FK)
          WHERE C.MEMBER_CODE_FK = #{memberCode}
+            <if test="criteria != '' and criteria == 'title'">
+           AND A.TITLE LIKE '%'||#{content}||'%'
+            </if>
+            <if test="criteria != '' and criteria == 'comName'">
+           AND B.COM_NAME LIKE '%'||#{content}||'%'
+            </if>
+         ORDER BY A.NOTICE_CODE_PK
+        OFFSET #{page} ROWS FETCH NEXT 10 ROWS ONLY
+
     </select>
 
 </mapper>
