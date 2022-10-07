@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.init.resume.model.dao.ResumeMapper">
+
+    <insert id="registMainResume" parameterType="ResumeDTO">
+        INSERT INTO TBL_RSM_RESUME
+        (
+           RESUME_CODE_PK, PERSONAL_NAME, GENDER
+         , BIRTH_DATE, ADDRESS, HOUSE_PHONE
+         , MOBILE_PHONE, PICTURE_IS_OPENED, IMG_CODE_FK
+         , MEMBER_CODE_FK, TITLE, ZIPCODE
+         , EMAIL
+        )
+        VALUES
+        (
+            SEQ_RSM_RESUME_CODE_PK.NEXTVAL, #{name}, #{gender}
+          , #{birthday}, #{address}, #{housePhone}
+          , #{mobilePhone}, #{isOpenedPicture}, #{imageCode}
+          , #{memberCode}, #{title}, #{zipCode}
+          , #{email}
+        )
+    </insert>
+
+    <insert id="registSchoolResume" parameterType="SchoolDTO">
+        INSERT INTO TBL_RSM_EDUCATION
+        (
+           EDUCATION_CODE_PK, DIVISION, SCHOOL_NAME
+         , START_DATE, END_DATE, MAJOR
+         , STATUS, RESUME_CODE_FK, TOTAL_SCORE
+         , RECORDED_SCORE
+        )
+        VALUES
+        (
+            SEQ_RSM_EDUCATAION_CODE_PK.NEXTVAL, #{schoolDivision}, #{schoolName}
+          , #{schoolStartDate}, #{schoolEndDate}, #{major}
+          , #{schoolStatus}, SEQ_RSM_RESUME_CODE_PK.CURRVAL, #{totalScore}
+          , #{recordedScore}
+        )
+    </insert>
+
+    <insert id="registCareerResume" parameterType="CareerDTO">
+        INSERT INTO TBL_RSM_CAREER
+        (
+           CAREER_CODE_PK, START_DATE, END_DATE
+         , COMPANY_NAME, NAME_IS_OPENED, RSM_POSITION
+         , RSM_STATUS, TASK, ETC
+         , CERTIFICATE, RESUME_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_CAREER_CODE_PK.NEXTVAL, #{startDate}, #{endDate}
+          , #{companyName}, #{nameIsOpened}, #{position}
+          , #{status}, #{task}, #{etc}
+          , #{certificate}, SEQ_RSM_RESUME_CODE_PK.CURRVAL
+        )
+    </insert>
+
+
+</mapper>

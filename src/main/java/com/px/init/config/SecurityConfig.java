@@ -41,7 +41,7 @@ public class SecurityConfig {
     }
 
 
-    @Bean
+    @Bean // public SecurityFilterChain
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .exceptionHandling()
@@ -50,9 +50,9 @@ public class SecurityConfig {
 
                 .and()
                 .httpBasic()
-                .disable()
+                    .disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .authorizeRequests()

@@ -15,6 +15,9 @@
         <typeAlias type="com.px.init.member.model.dto.MemberDTO" alias="MemberDTO"/>
         <typeAlias type="com.px.init.member.model.dto.MemberRoleDTO" alias="MemberRoleDTO"/>
         <typeAlias type="com.px.init.member.model.dto.AuthorityDTO" alias="AuthorityDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.ResumeDTO" alias="ResumeDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.SchoolDTO" alias="SchoolDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.CareerDTO" alias="CareerDTO"/>
     </typeAliases>
 
     <mappers>
