@@ -68,7 +68,7 @@ public class MatchController {
         map.put("noticeCode", noticeCode);
         map.put("memberCode", memberCode);
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyDetail(map)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역상세조회", matchService.selectPersonalApplyDetail(map)));
     }
 
 }

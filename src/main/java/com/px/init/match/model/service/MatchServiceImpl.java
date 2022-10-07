@@ -26,7 +26,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<PersonalApplyDetailDTO> selectPersonalApplyDetail(Map<String, Integer> map) {
+    public PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map) {
         return mapper.selectPersonalApplyDetail(map);
     }
 }

@@ -11,5 +11,5 @@ import java.util.Map;
 public interface MatchService {
     List<PersonalApplyListDTO> selectPersonalApplyList(RequestPersonalApplyListDTO requestPersonalApplyListDTO);
 
-    List<PersonalApplyDetailDTO> selectPersonalApplyDetail(Map<String, Integer> map);
+    PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map);
 }
