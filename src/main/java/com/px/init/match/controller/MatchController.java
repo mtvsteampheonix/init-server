@@ -25,7 +25,7 @@ import java.util.Map;
  * @see
  */
 @RestController
-@RequestMapping("/matchs")
+@RequestMapping("/matches")
 public class MatchController {
 
     /**
