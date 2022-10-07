@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.init.match.model.dao.MatchMapper">
+    <resultMap id="personalApplyList" type="com.px.init.match.model.dto.PersonalApplyListDTO">
+        <id property="noticeCode" column="NOTICE_CODE_PK"/>
+        <result property="title" column="TITLE"/>
+        <result property="career" column="CAREER"/>
+        <result property="education" column="EDUCATION"/>
+        <result property="entLocation" column="ENT_LOCATION"/>
+        <result property="postStartDate" column="POST_START_DATE"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="isAccepted" column="IS_ACCEPTED"/>
+    </resultMap>
+
+    <select id="selectPersonalApplyList" resultMap="personalApplyList">
+        SELECT
+               A.NOTICE_CODE_PK
+             , A.TITLE
+             , A.CAREER
+             , A.EDUCATION
+             , A.ENT_LOCATION
+             , A.POST_START_DATE
+             , B.COM_NAME
+             , C.IS_ACCEPTED
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+          JOIN TBL_JS_APPLICATION C ON (A.NOTICE_CODE_PK = C.NOTICE_CODE_FK)
+         WHERE C.MEMBER_CODE_FK = #{memberCode}
+            <if test="criteria != '' and criteria == 'title'">
+           AND A.TITLE LIKE '%'||#{content}||'%'
+            </if>
+            <if test="criteria != '' and criteria == 'comName'">
+           AND B.COM_NAME LIKE '%'||#{content}||'%'
+            </if>
+         ORDER BY A.NOTICE_CODE_PK
+        OFFSET #{page} ROWS FETCH NEXT 10 ROWS ONLY
+
+    </select>
+
+</mapper>
