@@ -4,6 +4,7 @@ import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -45,7 +46,7 @@ public interface AuthService {
      * @param session   the session
      * @throws Exception the exception
      */
-    void sendVerifyCode(MemberDTO memberDTO, HttpSession session) throws Exception;
+    void sendVerifyCode(MemberDTO memberDTO,  HttpServletRequest httpRequest) throws Exception;
 
     /**
      * 이메일 인증 번호 검사요청 서비스 메소드

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Random;
 
@@ -120,8 +121,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void sendVerifyCode(MemberDTO memberDTO, HttpSession session) throws DuplicateMemberEmailException {
+    @Async
+    public void sendVerifyCode(MemberDTO memberDTO, HttpServletRequest httpRequest) throws DuplicateMemberEmailException {
         log.info("[AuthService] sendVerifyCode Start ===================================");
+        HttpSession session = httpRequest.getSession();
         String email = memberDTO.getEmail();
         log.info("[AuthService] memberDTO {}", email);
         // 인증을 원하는 이메일 주소
@@ -148,7 +151,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Async
     public void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session) {
         log.info("[AuthService] verifyEmailVerifyCode START ===========================");
         log.info("[AuthService] inputVerifyCode {}", inputVerifyCode);
@@ -166,18 +168,17 @@ public class AuthServiceImpl implements AuthService {
     private String createVerifyCode() {
         StringBuilder verifyCode = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 5; i++) {
             int index = random.nextInt(3);
-
             switch (index) {
                 case 0:
-                    verifyCode.append((char) random.nextInt(26) + 97);
+                    verifyCode.append((char) (random.nextInt(26) + 97));
                     break;
                 case 1:
-                    verifyCode.append((char) random.nextInt(26) + 65);
+                    verifyCode.append((char)(random.nextInt(26) + 65));
                     break;
                 case 2:
-                    verifyCode.append(random.nextInt(10));
+                    verifyCode.append( random.nextInt(10));
                     break;
             }
         }

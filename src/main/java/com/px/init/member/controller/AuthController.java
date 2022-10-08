@@ -68,8 +68,8 @@ public class AuthController {
 
 
     @PutMapping("/verify-code/send")
-    public ResponseEntity<ResponseDTO> sendEmailVerifyCode(@RequestBody MemberDTO memberDTO, HttpSession httpSession) {
-        authService.sendVerifyCode(memberDTO, httpSession);
+    public ResponseEntity<ResponseDTO> sendEmailVerifyCode(@RequestBody MemberDTO memberDTO, HttpServletRequest httpRequest) {
+        authService.sendVerifyCode(memberDTO, httpRequest);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "이메일 전송 성공", null));
     }
 
