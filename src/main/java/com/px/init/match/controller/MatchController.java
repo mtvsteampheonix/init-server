@@ -1,7 +1,7 @@
 package com.px.init.match.controller;
 
 import com.px.init.common.dto.ResponseDTO;
-import com.px.init.match.model.dto.RequestPersonalApplyListDTO;
+import com.px.init.match.model.dto.RequestListDTO;
 import com.px.init.match.model.service.MatchService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +50,9 @@ public class MatchController {
      * @return the response entity
      */
     @GetMapping("/personal/apply-list")
-    public ResponseEntity<ResponseDTO> selectPersonalApplyList(@ModelAttribute RequestPersonalApplyListDTO requestPersonalApplyListDTO){
-        System.out.println("requestPersonalApplyListDTO = " + requestPersonalApplyListDTO);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(requestPersonalApplyListDTO)));
+    public ResponseEntity<ResponseDTO> selectPersonalApplyList(@ModelAttribute RequestListDTO requestListDTO){
+        System.out.println("requestPersonalApplyListDTO = " + requestListDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(requestListDTO)));
     }
 
     /**
@@ -69,6 +69,11 @@ public class MatchController {
         map.put("memberCode", memberCode);
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역상세조회", matchService.selectPersonalApplyDetail(map)));
+    }
+
+    @GetMapping("/personal/suggestion-list")
+    public ResponseEntity<ResponseDTO> selectPersonalSuggestionList(@ModelAttribute RequestListDTO requestListDTO){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectSuggestionList(requestListDTO)));
     }
 
 }
