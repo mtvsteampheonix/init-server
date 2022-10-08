@@ -3,7 +3,8 @@ package com.px.init.match.model.service;
 import com.px.init.match.model.dao.MatchMapper;
 import com.px.init.match.model.dto.PersonalApplyDetailDTO;
 import com.px.init.match.model.dto.PersonalApplyListDTO;
-import com.px.init.match.model.dto.RequestPersonalApplyListDTO;
+import com.px.init.match.model.dto.PersonalSuggestionListDTO;
+import com.px.init.match.model.dto.RequestListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,17 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<PersonalApplyListDTO> selectPersonalApplyList(RequestPersonalApplyListDTO requestPersonalApplyListDTO) {
-        return mapper.selectPersonalApplyList(requestPersonalApplyListDTO);
+    public List<PersonalApplyListDTO> selectPersonalApplyList(RequestListDTO requestListDTO) {
+        return mapper.selectPersonalApplyList(requestListDTO);
     }
 
     @Override
     public PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map) {
         return mapper.selectPersonalApplyDetail(map);
+    }
+
+    @Override
+    public List<PersonalSuggestionListDTO> selectSuggestionList(RequestListDTO requestListDTO) {
+        return mapper.selectSuggestionList(requestListDTO);
     }
 }

@@ -12,16 +12,16 @@ package com.px.init.match.model.dto;
  * @version 1.0(클래스의 버전)
  * @see
  */
-public class RequestPersonalApplyListDTO {
+public class RequestListDTO {
     private int memberCode;
     private int page;
     private String criteria;
     private String content;
 
-    public RequestPersonalApplyListDTO() {
+    public RequestListDTO() {
     }
 
-    public RequestPersonalApplyListDTO(int memberCode, int page, String criteria, String content) {
+    public RequestListDTO(int memberCode, int page, String criteria, String content) {
         this.memberCode = memberCode;
         this.page = page;
         this.criteria = criteria;

@@ -27,6 +27,15 @@
         <result property="noticeCode" column="NOTICE_CODE_PK"/>
         <result property="selfIntroductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
     </resultMap>
+    <resultMap id="personalSuggestionList" type="com.px.init.match.model.dto.PersonalSuggestionListDTO">
+        <id property="interviewSuggestionCode" column="INTERVIEW_SUGGESTION_CODE"/>
+        <result property="division" column="DIVSTION"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="interviewDate" column="INTERVIEW_DATE"/>
+        <result property="suggestionResponse" column="SUGGESTION_RESPONSE"/>
+    </resultMap>
+
 
     <select id="selectPersonalApplyList" resultMap="personalApplyList">
         SELECT
@@ -70,4 +79,24 @@
            AND D.MEMBER_CODE_FK = #{memberCode}
     </select>
 
+    <select id="selectSuggestionList" resultMap="personalSuggestionList">
+        SELECT
+               A.INTERVIEW_SUGGESTION_CODE_PK
+             , A.DIVISTION
+             , B.COM_NAME
+             , B.COM_URL
+             , A.INTERVIEW_DATE
+             , A.SUGGESTION_RESPONSE
+          FROM TBL_MT_INTERVIEW_SUGGESTION A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.MEMBER_CODE_FK = #{memberCode}
+            <if test="criteria != '' and criteria == 'comName'">
+           AND B.COM_NAME LIKE '%'||#{content}||'%'
+            </if>
+<!--            <if test="criteria != '' and criteria == 'interviewDate'">-->
+<!--           AND A.INTERVIEW_DATE LIKE '%'||#{content}||'%'-->
+<!--            </if>-->
+         ORDER BY A.INTERVIEW_DATE
+        OFFSET ${page} ROWS FETCH NEXT 10 ROWS ONLY
+    </select>
 </mapper>
