@@ -1,10 +1,7 @@
 package com.px.init.match.model.service;
 
 
-import com.px.init.match.model.dto.PersonalApplyDetailDTO;
-import com.px.init.match.model.dto.PersonalApplyListDTO;
-import com.px.init.match.model.dto.PersonalSuggestionListDTO;
-import com.px.init.match.model.dto.RequestListDTO;
+import com.px.init.match.model.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -14,5 +11,9 @@ public interface MatchService {
 
     PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map);
 
-    List<PersonalSuggestionListDTO> selectSuggestionList(RequestListDTO requestListDTO);
+    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(RequestListDTO requestListDTO);
+
+    PersonalSuggestionListDetailDTO selectPersonalSuggestionListDetail(int interviewSuggestionCode);
+
+    String updateInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception;
 }

@@ -2,6 +2,7 @@ package com.px.init.match.controller;
 
 import com.px.init.common.dto.ResponseDTO;
 import com.px.init.match.model.dto.RequestListDTO;
+import com.px.init.match.model.dto.RequestUpdateInterviewSuggestionDTO;
 import com.px.init.match.model.service.MatchService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,6 @@ public class MatchController {
      */
     @GetMapping("/personal/apply-list")
     public ResponseEntity<ResponseDTO> selectPersonalApplyList(@ModelAttribute RequestListDTO requestListDTO){
-        System.out.println("requestPersonalApplyListDTO = " + requestListDTO);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(requestListDTO)));
     }
 
@@ -73,7 +73,16 @@ public class MatchController {
 
     @GetMapping("/personal/suggestion-list")
     public ResponseEntity<ResponseDTO> selectPersonalSuggestionList(@ModelAttribute RequestListDTO requestListDTO){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectSuggestionList(requestListDTO)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectPersonalSuggestionList(requestListDTO)));
     }
 
+    @GetMapping("/personal/suggestion-detail")
+    public ResponseEntity<ResponseDTO> selectPersonalSuggestionDetail(@RequestParam int interviewSuggestionCode){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectPersonalSuggestionListDetail(interviewSuggestionCode)));
+    }
+
+    @PutMapping("/personal/suggestion-response")
+    public ResponseEntity<ResponseDTO> updateInterviewSuggestionResponse(@RequestBody RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception {
+        return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "면접제안응답수정", matchService.updateInterviewSuggestionResponse(requestUpdateInterviewSuggestionDTO))));
+    }
 }
