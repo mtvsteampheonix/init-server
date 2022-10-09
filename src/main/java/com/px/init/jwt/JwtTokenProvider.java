@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,15 @@ import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Jwt token provider.
+ */
 @Component
 public class JwtTokenProvider{
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
     private static final String AUTHORITIES_KEY = "auths";
     private static final String MEMBER_CODE = "memberCode";
+    private static final String MEMBER_NAME = "memberName";
     private static final String BEARER_TYPE = "bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 10분 // 잠시 60분으로
 
@@ -34,12 +39,24 @@ public class JwtTokenProvider{
 
     private final Key key;
 
+    /**
+     * Instantiates a new Jwt token provider.
+     *
+     * @param userDetailsService the user details service
+     * @param secretkey          the secretkey
+     */
     public JwtTokenProvider(UserDetailsService userDetailsService,@Value("${jwt.secretKey}") String secretkey) {
         this.userDetailsService = userDetailsService;
         byte[] keyBytes = Decoders.BASE64.decode(secretkey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    /**
+     * Generate token dto token dto.
+     *
+     * @param member the member
+     * @return the token dto
+     */
     public TokenDTO generateTokenDTO(MemberDTO member){
         log.info("[TokenProvider] generateTokenDTO START ===================================");
         log.info("[TokenProvider] {}", member.getMemberRole());
@@ -54,9 +71,9 @@ public class JwtTokenProvider{
         Claims claims = Jwts.claims().setSubject(member.getMemberId());
         claims.put(AUTHORITIES_KEY, roles.get(0));
         claims.put(MEMBER_CODE, member.getMemberCodePk());
+        claims.put(MEMBER_NAME, member.getMemberName());
 
         long now = (new Date()).getTime();
-
         //Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
@@ -68,6 +85,12 @@ public class JwtTokenProvider{
         return new TokenDTO(BEARER_TYPE, member.getMemberName(), accessToken, accessTokenExpiresIn.getTime());
     }
 
+    /**
+     * Get user id string.
+     *
+     * @param accessToken the access token
+     * @return the string
+     */
     public String getUserId(String accessToken){
         return Jwts
                 .parserBuilder()
@@ -78,6 +101,12 @@ public class JwtTokenProvider{
                 .getSubject();
     }
 
+    /**
+     * Gets authentication.
+     *
+     * @param accessToken the access token
+     * @return the authentication
+     */
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
         if (claims.get(AUTHORITIES_KEY) == null) {
@@ -96,6 +125,12 @@ public class JwtTokenProvider{
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    /**
+     * Validate token boolean.
+     *
+     * @param token the token
+     * @return the boolean
+     */
     public boolean validateToken(String token){
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

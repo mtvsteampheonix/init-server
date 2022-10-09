@@ -4,7 +4,7 @@ import com.px.init.common.dto.ResponseDTO;
 import com.px.init.exception.EmailException;
 import com.px.init.exception.SignupException;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalFormDataDTO;
+import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.service.AuthServiceImpl;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -44,16 +43,16 @@ public class AuthController {
     public AuthController(AuthServiceImpl authService) {
         this.authService = authService;
     }
+
     /**
      * 개인 회원 회원가입을 위한 컨트롤러 메소드
      *
-     * @param PersonalFormData the personal form data
+     * @param personalFormData the personal form data
      * @param httpRequest      the http request
      * @return the response entity
-     * @throws LoginException 로그인 실패시 익셉션 발생
      */
     @PostMapping("/signup/personal")
-    public ResponseEntity<ResponseDTO> signup(@RequestBody PersonalFormDataDTO personalFormData, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> signup(@RequestBody PersonalMemberDTO personalFormData, HttpServletRequest httpRequest) {
         HttpSession session = httpRequest.getSession(false);
         System.out.println("personalFormData = " + personalFormData);
         if (session == null) {

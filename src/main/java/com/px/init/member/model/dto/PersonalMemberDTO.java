@@ -10,19 +10,19 @@ package com.px.init.member.model.dto;
  *
  * @author 손창우
  * @version 1.0
- * @see 참고할 class나 외부 url
+ * @see 참고할class나 외부 url
  */
-public class PersonalFormDataDTO {
+public class PersonalMemberDTO {
     private String memberId;
     private String memberPw;
     private String memberName;
     private String email;
     private String phone;
 
-    public PersonalFormDataDTO() {
+    public PersonalMemberDTO() {
     }
 
-    public PersonalFormDataDTO(String memberId, String memberPw, String memberName, String email, String phone) {
+    public PersonalMemberDTO(String memberId, String memberPw, String memberName, String email, String phone) {
         this.memberId = memberId;
         this.memberPw = memberPw;
         this.memberName = memberName;

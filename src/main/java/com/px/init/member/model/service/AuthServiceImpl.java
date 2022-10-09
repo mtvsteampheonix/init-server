@@ -7,7 +7,7 @@ import com.px.init.exception.EmailException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalFormDataDTO;
+import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.slf4j.Logger;
@@ -64,13 +64,13 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 회원가입 서비스 구현체 메소드
      *
-     * @param memberDTO the member dto
+     * @param personalFormData the member dto
      * @return the member dto
      * @throws DuplicateMemberEmailException the login exception
      */
     @Transactional
     @Override
-    public PersonalFormDataDTO signup(PersonalFormDataDTO personalFormData) throws DuplicateMemberEmailException {
+    public PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws DuplicateMemberEmailException {
         log.info("[AuthService] Login START ===================================");
         log.info("[AuthService] {}", personalFormData);
         if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {
@@ -94,7 +94,6 @@ public class AuthServiceImpl implements AuthService {
      * @param memberDTO the member dto
      * @return the token dto
      */
-    @Transactional
     @Override
     public TokenDTO login(MemberDTO memberDTO) throws LoginException {
         log.info("[AuthService] Login Start ===================================");
@@ -116,7 +115,6 @@ public class AuthServiceImpl implements AuthService {
         // 토큰 발급
         TokenDTO token = tokenProvider.generateTokenDTO(member);
         log.info("[AuthService] tokenDto {}", token);
-
         log.info("[AuthService] Login End ===================================");
         return token;
     }
@@ -153,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session) {
+    public void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session) throws EmailException {
         log.info("[AuthService] verifyEmailVerifyCode START ===========================");
         log.info("[AuthService] inputVerifyCode {}", inputVerifyCode);
         String verifyCode = session.getAttribute("verifyCode").toString();

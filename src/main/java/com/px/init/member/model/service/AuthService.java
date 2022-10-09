@@ -1,7 +1,7 @@
 package com.px.init.member.model.service;
 
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalFormDataDTO;
+import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public interface AuthService {
      * @return the member dto
      * @throws Exception the exception
      */
-    PersonalFormDataDTO signup(PersonalFormDataDTO personalFormData) throws Exception;
+    PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws Exception;
 
     /**
      * 로그인 서비스
@@ -54,7 +54,7 @@ public interface AuthService {
      * @param inputVerifyCode the input verify code
      * @param session         the session
      */
-    void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session);
+    void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session) throws Exception;
 
     /**
      * Check id boolean.
