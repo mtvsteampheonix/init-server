@@ -18,16 +18,30 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+/**
+ * The type Jwt filter.
+ */
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(OncePerRequestFilter.class);
 
+    /**
+     * The constant AUTHORIZATION_HEADER.
+     */
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    /**
+     * The constant BEARER_PREFIX.
+     */
     public static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
 
 
+    /**
+     * Instantiates a new Jwt filter.
+     *
+     * @param jwtTokenProvider the jwt token provider
+     */
     public JwtFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -44,6 +58,8 @@ public class JwtFilter extends OncePerRequestFilter {
             // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+                
+                log.info("[JwtFilter] authentication {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             log.info("[JwtFilter] doFilterInternal END ===================================");

@@ -50,15 +50,16 @@ public class SecurityConfig {
 
                 .and()
                 .httpBasic()
-                    .disable()
+                .disable()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auths/**").permitAll()
-                .antMatchers("/members/**").permitAll()
+                .antMatchers("/members/**").hasAnyRole("PERSONAL", "COMPANY", "ADMIN")
+//                .antMatchers("/members/**").permitAll()
                 .antMatchers("/matches/**").permitAll()
 //                .antMatchers("/members/**").hasAnyRole("ADMIN")
                 .antMatchers("**").denyAll()
@@ -72,11 +73,12 @@ public class SecurityConfig {
 //        http.addFilterBefore()
         return http.build();
     }
+
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Accept", "Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(60L);
