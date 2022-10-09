@@ -1,6 +1,7 @@
 package com.px.init.member.model.dao;
 
 import com.px.init.member.model.dto.MemberDTO;
+import com.px.init.member.model.dto.PersonalFormDataDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,10 +32,10 @@ public interface MemberMapper {
     /**
      * Insert personal member int.
      *
-     * @param memberDTO the member dto
+     * @param personalFormData the personal form data
      * @return the int
      */
-    int insertPersonalMember(MemberDTO memberDTO);
+    int insertPersonalMember(PersonalFormDataDTO personalFormData);
 
     /**
      * Select member by member id member dto.

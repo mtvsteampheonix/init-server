@@ -1,12 +1,15 @@
 server:
   port: 8080
 
+
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@mtvsdbserver_low?TNS_ADMIN=./src/main/resources/databases/Wallet_mtvsDBServer
     username: INIT
     password: Teamphoenix12
+  config:
+    import: email.yml
 
 jwt:
   secretKey: asdfjp298pafo1320efqw0udvnh0er0h412r08byfdq9dsvh02143908hfeqwn80fdqs0nfdqs0n412013rq0nqefn08dfas0das730732g86923

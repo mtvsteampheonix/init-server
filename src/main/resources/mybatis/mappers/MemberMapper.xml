@@ -67,7 +67,7 @@
          WHERE EMAIL = #{email}
     </select>
 
-    <insert id="insertPersonalMember" parameterType="MemberDTO">
+    <insert id="insertPersonalMember" parameterType="PersonalFormDataDTO">
         INSERT ALL
         INTO TBL_MB_MEMBER
         (
@@ -87,7 +87,6 @@
             VALUES (SEQ_MB_MEMBER_CODE_PK.currval,2)
         SELECT *
         FROM DUAL
-
     </insert>
 
 

@@ -46,15 +46,16 @@ public class JwtFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            log.info("[JwtFilter] doFilterInternal END ===================================");
             filterChain.doFilter(request, response);
         } catch (RuntimeException e) {
+            log.info("[JwtFilter] 잘못된 토큰 !!");
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
             ApiExceptionDTO errorResponse = new ApiExceptionDTO(HttpStatus.UNAUTHORIZED, e.getMessage());
-
-
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            log.info("[JwtFilter] doFilterInternal ERROR ===================================");
             response.getWriter().write(convertObjectToJson(errorResponse));
         }
     }
