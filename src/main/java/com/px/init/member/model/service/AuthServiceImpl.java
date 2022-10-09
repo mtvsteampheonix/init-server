@@ -7,11 +7,12 @@ import com.px.init.exception.EmailException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
 import com.px.init.member.model.dto.MemberDTO;
+import com.px.init.member.model.dto.PersonalFormDataDTO;
 import com.px.init.member.model.dto.TokenDTO;
+import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,20 +70,20 @@ public class AuthServiceImpl implements AuthService {
      */
     @Transactional
     @Override
-    public MemberDTO signup(MemberDTO memberDTO) throws DuplicateMemberEmailException {
+    public PersonalFormDataDTO signup(PersonalFormDataDTO personalFormData) throws DuplicateMemberEmailException {
         log.info("[AuthService] Login START ===================================");
-        log.info("[AuthService] {}", memberDTO);
-        if (mapper.selectMemberByEmail(memberDTO.getEmail()) != null) {
+        log.info("[AuthService] {}", personalFormData);
+        if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {
             log.info("[AuthService] 이메일이 중복됩니다.");
             throw new DuplicateMemberEmailException("이메일이 중복됩니다.");
         }
         log.info("[AuthService] Member Signup Start ==============================");
-        memberDTO.setMemberPw(passwordEncoder.encode(memberDTO.getMemberPw()));
-        log.info("[AuthService] Member {}", memberDTO);
-        int result = mapper.insertPersonalMember(memberDTO);
+        personalFormData.setMemberPw(passwordEncoder.encode(personalFormData.getMemberPw()));
+        log.info("[AuthService] Member {}", personalFormData);
+        int result = mapper.insertPersonalMember(personalFormData);
         log.info("[AuthService] Member Insert Result {}", result > 0 ? "회원 가입 성공" : "회원 가입 실패");
         log.info("[AuthService] Signup End ==============================");
-        return memberDTO;
+        return personalFormData;
 
 
     }
@@ -121,10 +122,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Async
     public void sendVerifyCode(MemberDTO memberDTO, HttpServletRequest httpRequest) throws DuplicateMemberEmailException {
         log.info("[AuthService] sendVerifyCode Start ===================================");
-        HttpSession session = httpRequest.getSession();
+        HttpSession session = httpRequest.getSession(true);
         String email = memberDTO.getEmail();
         log.info("[AuthService] memberDTO {}", email);
         // 인증을 원하는 이메일 주소
@@ -146,6 +146,8 @@ public class AuthServiceImpl implements AuthService {
         session.setMaxInactiveInterval(60 * 5);
         session.setAttribute("verifyCode", verifyCode);
         emailController.sendEmail(emailDTO);
+        log.info("[AuthService] sendVerifyCode End ===================================");
+
 //        new EmailDTO("email", "")
 //        emailController.sendEmail();
     }
@@ -160,9 +162,24 @@ public class AuthServiceImpl implements AuthService {
             log.info("[AuthService] 이메일 인증 성공, 1시간 이내로 가입해주세요.");
             session.setAttribute("isEmailVerify", true);
             session.setMaxInactiveInterval(60 * 60);
+            log.info("[AuthService] verifyEmailVerifyCode End ===================================");
             return;
         }
+        log.info("[AuthService] 이메일 인증 실패");
+
         throw new EmailException("이메일 인증에 실패하였습니다.");
+    }
+
+    @Override
+    public boolean checkId(String inputId) throws DuplicateMemberException {
+        log.info("[AuthService] checkId START ===========================");
+        log.info("[AuthService] checkId {}", inputId);
+        if (mapper.selectMemberByMemberId(inputId) != null) {
+            log.info("[AuthService] 이미 가입된 아이디! ");
+            throw new DuplicateMemberException("이미 가입된 아이디 입니다!");
+        }
+        log.info("[AuthService] checkId End ===================================");
+        return true;
     }
 
     private String createVerifyCode() {
@@ -175,10 +192,10 @@ public class AuthServiceImpl implements AuthService {
                     verifyCode.append((char) (random.nextInt(26) + 97));
                     break;
                 case 1:
-                    verifyCode.append((char)(random.nextInt(26) + 65));
+                    verifyCode.append((char) (random.nextInt(26) + 65));
                     break;
                 case 2:
-                    verifyCode.append( random.nextInt(10));
+                    verifyCode.append(random.nextInt(10));
                     break;
             }
         }

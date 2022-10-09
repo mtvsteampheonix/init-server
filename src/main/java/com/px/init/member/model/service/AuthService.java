@@ -1,8 +1,8 @@
 package com.px.init.member.model.service;
 
 import com.px.init.member.model.dto.MemberDTO;
+import com.px.init.member.model.dto.PersonalFormDataDTO;
 import com.px.init.member.model.dto.TokenDTO;
-import org.springframework.scheduling.annotation.Async;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,11 +24,11 @@ public interface AuthService {
     /**
      * 회원가입 서비스
      *
-     * @param memberDTO the member dto
+     * @param personalFormData the personal form data
      * @return the member dto
      * @throws Exception the exception
      */
-    MemberDTO signup(MemberDTO memberDTO) throws Exception;
+    PersonalFormDataDTO signup(PersonalFormDataDTO personalFormData) throws Exception;
 
     /**
      * 로그인 서비스
@@ -42,11 +42,11 @@ public interface AuthService {
     /**
      * 이메일 인증 번호 전송요청 서비스 메소드
      *
-     * @param memberDTO the member dto
-     * @param session   the session
+     * @param memberDTO   the member dto
+     * @param httpRequest the http request
      * @throws Exception the exception
      */
-    void sendVerifyCode(MemberDTO memberDTO,  HttpServletRequest httpRequest) throws Exception;
+    void sendVerifyCode(MemberDTO memberDTO, HttpServletRequest httpRequest) throws Exception;
 
     /**
      * 이메일 인증 번호 검사요청 서비스 메소드
@@ -55,4 +55,13 @@ public interface AuthService {
      * @param session         the session
      */
     void verifyEmailVerifyCode(String inputVerifyCode, HttpSession session);
+
+    /**
+     * Check id boolean.
+     *
+     * @param inputId the input id
+     * @return the boolean
+     * @throws Exception the exception
+     */
+    boolean checkId(String inputId) throws Exception;
 }
