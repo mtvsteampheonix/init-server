@@ -1,5 +1,8 @@
 package com.px.init.member.model.dto;
 
+/**
+ * The type Authority dto.
+ */
 public class AuthorityDTO {
     private int authorityCode;
     private String authorityName;

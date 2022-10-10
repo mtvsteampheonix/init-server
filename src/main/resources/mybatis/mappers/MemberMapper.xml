@@ -67,7 +67,7 @@
          WHERE EMAIL = #{email}
     </select>
 
-    <insert id="insertPersonalMember" parameterType="MemberDTO">
+    <insert id="insertPersonalMember" parameterType="PersonalMemberDTO">
         INSERT ALL
         INTO TBL_MB_MEMBER
         (
@@ -87,8 +87,23 @@
             VALUES (SEQ_MB_MEMBER_CODE_PK.currval,2)
         SELECT *
         FROM DUAL
-
     </insert>
 
-
+    <update id="updatePersonalMember" parameterType="PersonalMemberDTO">
+        UPDATE TBL_MB_MEMBER A
+        <set>
+            <if test="memberName != null and memberName != ''">
+                A.MEMBER_NAME = #{memberName}
+            </if>
+            <if test="phone != null and phone != ''">
+              , A.PHONE = #{phone}
+            </if>
+        </set>
+       WHERE A.MEMBER_ID = #{memberId}
+    </update>
+    <update id="updatePassword" parameterType="PersonalMemberDTO">
+        UPDATE TBL_MB_MEMBER A
+           SET A.MEMBER_PW = #{memberPw}
+         WHERE A.MEMBER_ID = #{memberId}
+    </update>
 </mapper>

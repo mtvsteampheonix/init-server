@@ -13,6 +13,38 @@
         <result property="comName" column="COM_NAME"/>
         <result property="isAccepted" column="IS_ACCEPTED"/>
     </resultMap>
+    <resultMap id="personalApplyDetail" type="com.px.init.match.model.dto.PersonalApplyDetailDTO">
+        <result property="comName" column="COM_NAME"/>
+        <result property="title" column="aTITLE"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="resumeTitle" column="bTITLE"/>
+        <result property="portfolioTitle" column="PORTFOLIO_TITLE"/>
+        <result property="applicationDate" column="APPLICATION_DATE"/>
+        <collection property="selfIntroductionDTOList" resultMap="selfIntroduction"/>
+    </resultMap>
+    <resultMap id="selfIntroduction" type="com.px.init.match.model.dto.SelfIntroductionDTO">
+        <id property="selfIntroductionCode" column="SELF_INTRODUCTION_CODE_PK"/>
+        <result property="noticeCode" column="NOTICE_CODE_PK"/>
+        <result property="selfIntroductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
+    </resultMap>
+    <resultMap id="personalSuggestionList" type="com.px.init.match.model.dto.PersonalSuggestionListDTO">
+        <id property="interviewSuggestionCode" column="INTERVIEW_SUGGESTION_CODE_PK"/>
+        <result property="division" column="DIVSTION"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="interviewDate" column="INTERVIEW_DATE"/>
+        <result property="suggestionResponse" column="SUGGESTION_RESPONSE"/>
+    </resultMap>
+
+    <resultMap id="personalSuggestionListDetail" type="com.px.init.match.model.dto.PersonalSuggestionListDetailDTO">
+        <result property="comName" column="COM_NAME"/>
+        <result property="comAddress" column="COM_ADDRESS"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="numEmp" column="NUM_EMP"/>
+        <result property="interviewDate" column="INTERVIEW_DATE"/>
+        <result property="description" column="DESCRIPTION"/>
+    </resultMap>
+
 
     <select id="selectPersonalApplyList" resultMap="personalApplyList">
         SELECT
@@ -28,6 +60,72 @@
           JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
           JOIN TBL_JS_APPLICATION C ON (A.NOTICE_CODE_PK = C.NOTICE_CODE_FK)
          WHERE C.MEMBER_CODE_FK = #{memberCode}
+            <if test="criteria != '' and criteria == 'title'">
+           AND A.TITLE LIKE '%'||#{content}||'%'
+            </if>
+            <if test="criteria != '' and criteria == 'comName'">
+           AND B.COM_NAME LIKE '%'||#{content}||'%'
+            </if>
+         ORDER BY A.NOTICE_CODE_PK
+        OFFSET #{page} ROWS FETCH NEXT 10 ROWS ONLY
+
     </select>
+    <select id="selectPersonalApplyDetail" resultMap="personalApplyDetail">
+        SELECT
+               B.COM_NAME
+             , B.COM_URL
+             , A.TITLE AS aTITLE
+             , C.TITLE AS bTITLE
+             , E.SELF_INTRODUCTION_CATEGORY
+             , D.APPLICATION_DATE
+             , D.IS_ACCEPTED
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_JS_SELF_INTRODUCTION E ON (A.NOTICE_CODE_PK = E.NOTICE_CODE_FK)
+          JOIN TBL_JS_APPLICATION D ON (A.NOTICE_CODE_PK = D.NOTICE_CODE_FK)
+          JOIN TBL_RSM_RESUME C ON (D.RESUME_CODE_FK = C.RESUME_CODE_PK)
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode}
+           AND D.MEMBER_CODE_FK = #{memberCode}
+    </select>
+
+    <select id="selectPersonalSuggestionList" resultMap="personalSuggestionList">
+        SELECT
+               A.INTERVIEW_SUGGESTION_CODE_PK
+             , A.DIVISTION
+             , B.COM_NAME
+             , B.COM_URL
+             , A.INTERVIEW_DATE
+             , A.SUGGESTION_RESPONSE
+          FROM TBL_MT_INTERVIEW_SUGGESTION A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.MEMBER_CODE_FK = #{memberCode}
+            <if test="criteria != '' and criteria == 'comName'">
+           AND B.COM_NAME LIKE '%'||#{content}||'%'
+            </if>
+<!--            <if test="criteria != '' and criteria == 'interviewDate'">-->
+<!--           AND A.INTERVIEW_DATE LIKE '%'||#{content}||'%'-->
+<!--            </if>-->
+         ORDER BY A.INTERVIEW_DATE
+        OFFSET ${page} ROWS FETCH NEXT 10 ROWS ONLY
+    </select>
+
+    <select id="selectPersonalSuggestionListDetail" resultMap="personalSuggestionListDetail">
+        SELECT
+               A.DESCRIPTION
+             , A.INTERVIEW_DATE
+             , B.COM_NAME
+             , B.COM_URL
+             , B.COM_ADDRESS
+             , B.NUM_EMP
+          FROM TBL_MT_INTERVIEW_SUGGESTION A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
+    </select>
+
+    <update id="updateInterviewSuggestionResponse">
+        UPDATE TBL_MT_INTERVIEW_SUGGESTION A
+           SET A.SUGGESTION_RESPONSE = #{response}
+         WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
+    </update>
 
 </mapper>

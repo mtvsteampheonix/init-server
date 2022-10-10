@@ -17,6 +17,10 @@
         <typeAlias type="com.px.init.member.model.dto.AuthorityDTO" alias="AuthorityDTO"/>
         <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchListDTO" alias="JobSearchListDTO"/>
         <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchDetailsDTO" alias="JobSearchDetailsDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.ResumeDTO" alias="ResumeDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.SchoolDTO" alias="SchoolDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.CareerDTO" alias="CareerDTO"/>
+        <typeAlias type="com.px.init.member.model.dto.PersonalMemberDTO" alias="PersonalMemberDTO"/>
     </typeAliases>
 
     <mappers>
