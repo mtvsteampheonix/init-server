@@ -15,9 +15,12 @@
         <typeAlias type="com.px.init.member.model.dto.MemberDTO" alias="MemberDTO"/>
         <typeAlias type="com.px.init.member.model.dto.MemberRoleDTO" alias="MemberRoleDTO"/>
         <typeAlias type="com.px.init.member.model.dto.AuthorityDTO" alias="AuthorityDTO"/>
+        <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchListDTO" alias="JobSearchListDTO"/>
+        <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchDetailsDTO" alias="JobSearchDetailsDTO"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="MemberMapper.xml"/>
+        <mapper resource="JobSearchMapper.xml"/>
     </mappers>
 </configuration>

@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auths/**").permitAll()
                 .antMatchers("/members/**").permitAll()
+                .antMatchers("/jobsearchs/**").permitAll()
 //                .antMatchers("/members/**").hasAnyRole("ADMIN")
                 .antMatchers("**").denyAll()
 
