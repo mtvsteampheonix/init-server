@@ -51,4 +51,6 @@ public interface MemberMapper {
     int updatePersonalMember(PersonalMemberDTO updateMember);
 
     int updatePassword(PersonalMemberDTO patchMember);
+
+    int deleteMember(int memberCodePk);
 }

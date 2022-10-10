@@ -57,14 +57,16 @@
           FROM TBL_MB_MEMBER A
           JOIN TBL_MB_MEMBER_ROLE B ON(A.MEMBER_CODE_PK = B.MEMBER_NO_PK_FK)
           JOIN TBL_MB_AUTHORITY C on B.AUTHORITY_CODE_PK_FK = C.AUTHORITY_CODE
-         WHERE A.MEMBER_ID = #{memberId}
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_ID = #{memberId}
     </select>
 
     <select id="selectMemberByEmail" resultType="MemberDTO">
         SELECT
-               MEMBER_ID
-          FROM TBL_MB_MEMBER
-         WHERE EMAIL = #{email}
+               A.MEMBER_ID
+          FROM TBL_MB_MEMBER A
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND EMAIL = #{email}
     </select>
 
     <insert id="insertPersonalMember" parameterType="PersonalMemberDTO">
@@ -99,11 +101,21 @@
               , A.PHONE = #{phone}
             </if>
         </set>
-       WHERE A.MEMBER_ID = #{memberId}
+       WHERE A.IS_WITHDRAWAL = 'N'
+         AND A.MEMBER_ID = #{memberId}
     </update>
     <update id="updatePassword" parameterType="PersonalMemberDTO">
         UPDATE TBL_MB_MEMBER A
            SET A.MEMBER_PW = #{memberPw}
-         WHERE A.MEMBER_ID = #{memberId}
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_ID = #{memberId}
+
+    </update>
+    <update id="deleteMember">
+        UPDATE  TBL_MB_MEMBER A
+           SET A.IS_WITHDRAWAL = 'Y'
+             , A.WITHDRAWAL_DATE = SYSDATE
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_CODE_PK = #{memberCodePk}
     </update>
 </mapper>
