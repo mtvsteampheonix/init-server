@@ -28,12 +28,21 @@
         <result property="selfIntroductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
     </resultMap>
     <resultMap id="personalSuggestionList" type="com.px.init.match.model.dto.PersonalSuggestionListDTO">
-        <id property="interviewSuggestionCode" column="INTERVIEW_SUGGESTION_CODE"/>
+        <id property="interviewSuggestionCode" column="INTERVIEW_SUGGESTION_CODE_PK"/>
         <result property="division" column="DIVSTION"/>
         <result property="comName" column="COM_NAME"/>
         <result property="comUrl" column="COM_URL"/>
         <result property="interviewDate" column="INTERVIEW_DATE"/>
         <result property="suggestionResponse" column="SUGGESTION_RESPONSE"/>
+    </resultMap>
+
+    <resultMap id="personalSuggestionListDetail" type="com.px.init.match.model.dto.PersonalSuggestionListDetailDTO">
+        <result property="comName" column="COM_NAME"/>
+        <result property="comAddress" column="COM_ADDRESS"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="numEmp" column="NUM_EMP"/>
+        <result property="interviewDate" column="INTERVIEW_DATE"/>
+        <result property="description" column="DESCRIPTION"/>
     </resultMap>
 
 
@@ -79,7 +88,7 @@
            AND D.MEMBER_CODE_FK = #{memberCode}
     </select>
 
-    <select id="selectSuggestionList" resultMap="personalSuggestionList">
+    <select id="selectPersonalSuggestionList" resultMap="personalSuggestionList">
         SELECT
                A.INTERVIEW_SUGGESTION_CODE_PK
              , A.DIVISTION
@@ -99,4 +108,24 @@
          ORDER BY A.INTERVIEW_DATE
         OFFSET ${page} ROWS FETCH NEXT 10 ROWS ONLY
     </select>
+
+    <select id="selectPersonalSuggestionListDetail" resultMap="personalSuggestionListDetail">
+        SELECT
+               A.DESCRIPTION
+             , A.INTERVIEW_DATE
+             , B.COM_NAME
+             , B.COM_URL
+             , B.COM_ADDRESS
+             , B.NUM_EMP
+          FROM TBL_MT_INTERVIEW_SUGGESTION A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
+    </select>
+
+    <update id="updateInterviewSuggestionResponse">
+        UPDATE TBL_MT_INTERVIEW_SUGGESTION A
+           SET A.SUGGESTION_RESPONSE = #{response}
+         WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
+    </update>
+
 </mapper>

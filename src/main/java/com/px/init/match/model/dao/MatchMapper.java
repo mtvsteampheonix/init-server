@@ -1,9 +1,6 @@
 package com.px.init.match.model.dao;
 
-import com.px.init.match.model.dto.PersonalApplyDetailDTO;
-import com.px.init.match.model.dto.PersonalApplyListDTO;
-import com.px.init.match.model.dto.PersonalSuggestionListDTO;
-import com.px.init.match.model.dto.RequestListDTO;
+import com.px.init.match.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +12,9 @@ public interface MatchMapper {
 
     PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map);
 
-    List<PersonalSuggestionListDTO> selectSuggestionList(RequestListDTO requestListDTO);
+    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(RequestListDTO requestListDTO);
+
+    PersonalSuggestionListDetailDTO selectPersonalSuggestionListDetail(int interviewSuggestionCode);
+
+    int updateInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO);
 }
