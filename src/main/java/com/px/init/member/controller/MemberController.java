@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * <pre>
  * Class : MemberController
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 손창우
  * @version 1.0
- * @see 참고할class나외부 url
+ * @see 참고할class나외부url
  */
 @RestController
 @RequestMapping("/members")
@@ -70,6 +72,17 @@ public class MemberController {
     public ResponseEntity<ResponseDTO> patchMemberPassword(@RequestBody PasswordRequestDTO passwordPatchInfo) {
 //        System.out.println("passwordPatchInfo = " + passwordPatchInfo);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "비밀번호 수정 완료", memberService.patchPassword(passwordPatchInfo)));
+    }
 
+    /**
+     * Delete member response entity.
+     *
+     * @param bodyMap the body map
+     * @return the response entity
+     */
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ResponseDTO> deleteMember(@RequestBody Map<String, String> bodyMap){
+        String memberPw = bodyMap.get("memberPw");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원 탈퇴 완료", memberService.deleteMember(memberPw)));
     }
 }
