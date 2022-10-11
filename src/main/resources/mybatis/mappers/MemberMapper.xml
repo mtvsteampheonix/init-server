@@ -66,7 +66,7 @@
                A.MEMBER_ID
           FROM TBL_MB_MEMBER A
          WHERE A.IS_WITHDRAWAL = 'N'
-           AND EMAIL = #{email}
+           AND A.EMAIL = #{email}
     </select>
 
     <insert id="insertPersonalMember" parameterType="PersonalMemberDTO">
@@ -91,6 +91,30 @@
         FROM DUAL
     </insert>
 
+    <insert id="insertCompanyMember" parameterType="CompanyMemberDTO">
+        INSERT ALL
+        INTO TBL_MB_MEMBER
+        (
+            MEMBER_CODE_PK, MEMBER_ID, MEMBER_PW
+        , PW_CHANGED_DATE, PW_EXPIRATION_DATE, MEMBER_NAME
+        , SIGNUP_DATE, EXPIRATION_DATE, WITHDRAWAL_DATE
+        , PHONE, EMAIL, IS_ENT_MEMBER
+        )
+        VALUES
+            (
+                SEQ_MB_MEMBER_CODE_PK.nextval, #{memberId}, #{memberPw}
+            , SYSDATE, SYSDATE + 365, #{memberName}
+            , SYSDATE, SYSDATE, NULL
+            , #{phone}, #{email}, 'Y'
+            )
+        INTO TBL_MB_MEMBER_ROLE (MEMBER_NO_PK_FK, AUTHORITY_CODE_PK_FK)
+        VALUES (SEQ_MB_MEMBER_CODE_PK.currval,3)
+        INTO TBL_MB_ENT_MEBER (REMAINING_POST, REMAINING_INQUIRE, COMPANY_CODE_FK, MEMBER_CODE_FK)
+        VALUES (0, 0, null, SEQ_MB_MEMBER_CODE_PK.currval)
+        SELECT *
+        FROM DUAL
+    </insert>
+
     <update id="updatePersonalMember" parameterType="PersonalMemberDTO">
         UPDATE TBL_MB_MEMBER A
         <set>
@@ -109,7 +133,6 @@
            SET A.MEMBER_PW = #{memberPw}
          WHERE A.IS_WITHDRAWAL = 'N'
            AND A.MEMBER_ID = #{memberId}
-
     </update>
     <update id="deleteMember">
         UPDATE  TBL_MB_MEMBER A

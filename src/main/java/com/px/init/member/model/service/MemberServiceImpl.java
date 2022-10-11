@@ -37,6 +37,14 @@ public class MemberServiceImpl implements MemberService {
     private MemberMapper mapper;
     private PasswordEncoder encoder;
     private JwtTokenProvider tokenProvider;
+
+    /**
+     * Instantiates a new Member service.
+     *
+     * @param mapper        the mapper
+     * @param encoder       the encoder
+     * @param tokenProvider the token provider
+     */
     @Autowired
     public MemberServiceImpl(MemberMapper mapper, PasswordEncoder encoder, JwtTokenProvider tokenProvider) {
         this.mapper = mapper;
@@ -84,9 +92,9 @@ public class MemberServiceImpl implements MemberService {
         }
 //        mapper.updatePersonalMember()
         // 토큰 발급
-        TokenDTO token = tokenProvider.generateTokenDTO(loginedMember);
+        MemberDTO updatedMember = mapper.selectMemberByMemberId(loginedMember.getMemberId());
+        TokenDTO token = tokenProvider.generateTokenDTO(updatedMember);
         log.info("[MemberService] tokenDto {}", token);
-
         log.info("[MemberService] updateMember END ==========================");
         return token;
     }
