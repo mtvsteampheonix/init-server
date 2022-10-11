@@ -4,8 +4,10 @@ import com.px.init.email.controller.EmailController;
 import com.px.init.email.model.dto.EmailDTO;
 import com.px.init.exception.DuplicateMemberEmailException;
 import com.px.init.exception.EmailException;
+import com.px.init.exception.SignupException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
+import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
@@ -71,21 +73,42 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws DuplicateMemberEmailException {
-        log.info("[AuthService] Login START ===================================");
-        log.info("[AuthService] {}", personalFormData);
+        log.info("[AuthService] signup(PersonalMemberDTO) START ===================================");
+        log.info("[AuthService] personalFormData {}", personalFormData);
         if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {
             log.info("[AuthService] 이메일이 중복됩니다.");
             throw new DuplicateMemberEmailException("이메일이 중복됩니다.");
         }
-        log.info("[AuthService] Member Signup Start ==============================");
         personalFormData.setMemberPw(passwordEncoder.encode(personalFormData.getMemberPw()));
         log.info("[AuthService] Member {}", personalFormData);
         int result = mapper.insertPersonalMember(personalFormData);
-        log.info("[AuthService] Member Insert Result {}", result > 0 ? "회원 가입 성공" : "회원 가입 실패");
-        log.info("[AuthService] Signup End ==============================");
+        log.info("[AuthService] Member Insert Result {}", result == 1 ? "회원 가입 성공" : "회원 가입 실패");
+        if(result <= 0){
+            throw new SignupException("회원가입에 실패했습니다.");
+        }
+        log.info("[AuthService] signup(PersonalMemberDTO) End ==============================");
         return personalFormData;
 
 
+    }
+
+    @Override
+    @Transactional
+    public CompanyMemberDTO signup(CompanyMemberDTO companyFormData) throws DuplicateMemberEmailException {
+        log.info("[AuthService] signup(CompanyMemberDTO) START ===================================");
+        log.info("[AuthService] companyFormData {}", companyFormData);
+        if (mapper.selectMemberByEmail(companyFormData.getEmail()) != null) {
+            log.info("[AuthService] 이메일이 중복됩니다.");
+            throw new DuplicateMemberEmailException("이메일이 중복됩니다.");
+        }
+        companyFormData.setMemberPw(passwordEncoder.encode(companyFormData.getMemberPw()));
+        int result = mapper.insertCompanyMember(companyFormData);
+        log.info("[AuthService] Member Insert Result {}", result == 1 ? "회원 가입 성공" : "회원 가입 실패");
+        if(result <= 0){
+            throw new SignupException("회원가입에 실패했습니다.");
+        }
+        log.info("[AuthService] signup(CompanyMemberDTO) End ==============================");
+        return null;
     }
 
     /**

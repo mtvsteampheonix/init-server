@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -59,6 +62,11 @@ public class MemberController {
      */
     @PutMapping("/personal")
     public ResponseEntity<ResponseDTO> updateMember(@RequestBody UpdatePersonalRequestDTO updatePersonal) {
+//        Cookie[] cookie = request.getCookies();
+//        for (int i = 0; i < cookie.length; i++) {
+//            cookie[i].setMaxAge(0);
+//            response.addCookie(cookie[i]);
+//        }
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 수정 완료", memberService.updateMember(updatePersonal)));
     }
 
@@ -81,7 +89,7 @@ public class MemberController {
      * @return the response entity
      */
     @DeleteMapping("/withdraw")
-    public ResponseEntity<ResponseDTO> deleteMember(@RequestBody Map<String, String> bodyMap){
+    public ResponseEntity<ResponseDTO> deleteMember(@RequestBody Map<String, String> bodyMap) {
         String memberPw = bodyMap.get("memberPw");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원 탈퇴 완료", memberService.deleteMember(memberPw)));
     }
