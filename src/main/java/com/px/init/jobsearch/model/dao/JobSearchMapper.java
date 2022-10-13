@@ -11,6 +11,7 @@ package com.px.init.jobsearch.model.dao;/*
  *
  */
 
+import com.px.init.jobsearch.model.dto.EditJobSearchDTO;
 import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
 import com.px.init.jobsearch.model.dto.JobSearchListDTO;
 import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
@@ -35,4 +36,6 @@ public  interface JobSearchMapper {
     List<JobSearchListDTO> selectMyJobSearchList(int companyCodeFk);
 
     int deleteJobSearch(int noticeCode);
+
+    EditJobSearchDTO selectEditJobSearch(int noticeCode);
 }

@@ -1,6 +1,7 @@
 package com.px.init.jobsearch.model.service;
 
 import com.px.init.jobsearch.model.dao.JobSearchMapper;
+import com.px.init.jobsearch.model.dto.EditJobSearchDTO;
 import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
 import com.px.init.jobsearch.model.dto.JobSearchListDTO;
 import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
@@ -96,9 +97,21 @@ public class JobSearchService {
     }
 
 
-    public int deleteJobSearch(int noticeCode) {
-        return jobSearchMapper.deleteJobSearch(noticeCode);
+    public int deleteJobSearch(List<Integer> noticeCodeList) {
+
+        int result = 0;
+        for (int noticeCode: noticeCodeList)
+        {
+            System.out.println(noticeCode);
+            result += jobSearchMapper.deleteJobSearch(noticeCode);
+        }
+
+        return result;
     }
 
 
+    public EditJobSearchDTO selectEditJobSearch(int noticeCode) {
+
+        return jobSearchMapper.selectEditJobSearch(noticeCode);
+    }
 }

@@ -89,8 +89,17 @@ public class JobSearchController {
     }
 
 
-    @DeleteMapping("/{noticeCode}")//게시
-    public ResponseEntity<ResponseDTO> deleteJobSearch(@PathVariable int noticeCode){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고삭제성공", jobSearchService.deleteJobSearch(noticeCode)));
+    @PatchMapping ("")//게시
+    public ResponseEntity<ResponseDTO> deleteJobSearch(@RequestBody List<Integer> noticeCodeList){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고삭제성공", jobSearchService.deleteJobSearch(noticeCodeList)));
+    }
+
+//    @PutMapping("")
+//    public ResponseEntity<ResponseDTO> up
+
+    @GetMapping("edit/{noticeCode}")
+    public ResponseEntity<ResponseDTO> selectEditJobSearch(@PathVariable int noticeCode){
+        System.out.println("getmapping test: " +noticeCode);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고수정용 데이터 Get성공", jobSearchService.selectEditJobSearch(noticeCode)));
     }
 }

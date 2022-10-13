@@ -18,12 +18,14 @@
         <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchListDTO" alias="JobSearchListDTO"/>
         <typeAlias type="com.px.init.jobsearch.model.dto.JobSearchDetailsDTO" alias="JobSearchDetailsDTO"/>
         <typeAlias type="com.px.init.jobsearch.model.dto.RegistJobSearchDTO" alias="RegistJobSearchDTO"/>
+        <typeAlias type="com.px.init.jobsearch.model.dto.EditJobSearchDTO" alias="EditJobSearchDTO"/>
         <typeAlias type="com.px.init.resume.model.dto.ResumeDTO" alias="ResumeDTO"/>
         <typeAlias type="com.px.init.resume.model.dto.SchoolDTO" alias="SchoolDTO"/>
         <typeAlias type="com.px.init.resume.model.dto.CareerDTO" alias="CareerDTO"/>
         <typeAlias type="com.px.init.member.model.dto.PersonalMemberDTO" alias="PersonalMemberDTO"/>
         <typeAlias type="com.px.init.member.model.dto.EntMemberDTO" alias="EntMemberDTO"/>
         <typeAlias type="com.px.init.company.model.dto.CompanyDTO" alias="CompanyDTO"/>
+
     </typeAliases>
 
     <mappers>

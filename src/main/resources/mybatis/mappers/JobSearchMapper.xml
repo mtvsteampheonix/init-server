@@ -90,6 +90,7 @@
              JOIN TBL_COM_COMPANY B
                   ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
     WHERE A.POST_START_DATE IS NOT NULL
+    AND A.IS_DELETED = 'N'
     AND (A.TITLE LIKE '%'||#{search}||'%'
     OR B.COM_NAME LIKE '%'||#{search}||'%')
     ORDER BY POST_START_DATE
@@ -120,6 +121,7 @@
                  JOIN TBL_COM_COMPANY B
                       ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
         WHERE A.COMPANY_CODE_FK = #{companyCodeFk}
+        AND A.IS_DELETED = 'N'
         ORDER BY POST_START_DATE
     </select>
 
@@ -327,8 +329,58 @@
             WHERE A.MEMBER_CODE_PK = #{memberCodePk}
     </select>
 
-    <delete id="deleteJobSearch" parameterType="int">
-        DELETE FROM TBL_JS_NOTICE
+    <update id="deleteJobSearch" parameterType="int">
+        UPDATE TBL_JS_NOTICE
+        SET
+            IS_DELETED = 'Y'
         WHERE NOTICE_CODE_PK = #{noticeCode}
-    </delete>
+    </update>
+
+    <resultMap id="EditJobSearchResultMap" type="EditJobSearchDTO">
+        <id property="noticeCodePk" column="NOTICE_CODE_PK"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="education" column="EDUCATION"/>
+        <result property="career" column="CAREER"/>
+        <result property="preference" column="PREFERENCE"/>
+        <result property="annualIncome" column="ANNUAL_INCOME"/>
+        <result property="entLocation" column="ENT_LOCATION"/>
+        <result property="recruitStartDate" column="RECRUIT_START_DATE"/>
+        <result property="recruitEndDate" column="RECRUIT_END_DATE"/>
+        <result property="companyCodeFk" column="COMPANY_CODE_FK"/>
+        <result property="benefits" column="NOTICE_BENEFIT"/>
+        <collection property="selfIntroList" resultMap="selfIntroResultMap"/>
+    </resultMap>
+    <resultMap id="selfIntroResultMap" type="QuestionDTO">
+        <id property="selfIntroductionCodePk" column="SELF_INTRODUCTION_CODE_PK"/>
+        <result property="noticeCodeFk" column="NOTICE_CODE_FK"/>
+        <result property="selfIntroductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
+    </resultMap>
+
+
+<select id="selectEditJobSearch" resultMap="EditJobSearchResultMap">
+    SELECT
+        A.NOTICE_CODE_PK,
+        A.TITLE,
+        A.CONTENT,
+        A.EDUCATION,
+        A.CAREER,
+        A.PREFERENCE,
+        A.ANNUAL_INCOME,
+        A.ENT_LOCATION,
+        A.RECRUIT_START_DATE,
+        A.RECRUIT_END_DATE,
+        A.COMPANY_CODE_FK,
+        A.NOTICE_BENEFIT,
+        B.SELF_INTRODUCTION_CODE_PK,
+        B.NOTICE_CODE_FK,
+        B.SELF_INTRODUCTION_CATEGORY
+        FROM TBL_JS_NOTICE A
+        JOIN TBL_JS_SELF_INTRODUCTION B ON A.NOTICE_CODE_PK =  B.NOTICE_CODE_FK
+        WHERE A.NOTICE_CODE_PK = #{noticeCode}
+
+
+</select>
+
 </mapper>
+
