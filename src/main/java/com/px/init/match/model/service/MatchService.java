@@ -24,4 +24,6 @@ public interface MatchService {
     List<String> failureEmailList(NoticeFailureDTO noticeFailureDTO);
 
     String updateAccepted(NoticeFailureDTO noticeFailureDTO) throws Exception;
+
+    CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode);
 }

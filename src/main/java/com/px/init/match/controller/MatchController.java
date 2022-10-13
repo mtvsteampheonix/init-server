@@ -118,4 +118,9 @@ public class MatchController {
         }
         return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "개인회원불합격처리", "전송이 완료되었습니다.")));
     }
+
+    @GetMapping("/company/apply-detail")
+    public ResponseEntity<ResponseDTO> selectCompanyApplyDetail(@RequestParam int applicationCode){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원자상세조회", matchService.selectCompanyApplyDetail(applicationCode)));
+    }
 }
