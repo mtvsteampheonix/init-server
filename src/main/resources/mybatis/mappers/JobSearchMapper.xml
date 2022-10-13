@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.init.jobsearch.model.dao.JobSearchMapper">
+
+<!--    <resultMap id="authorityDTOResultMap" type="AuthorityDTO">-->
+<!--        <id property="authorityCode" column="AUTHORITY_CODE"/>-->
+<!--        <result property="authorityName" column="AUTHORITY_NAME"/>-->
+<!--        <result property="authorityDesc" column="AUTHORITY_DESC"/>-->
+<!--    </resultMap>-->
+
+<!--    <resultMap id="JobSearchDetailsDTOResultMap" type="JobSearchDetailsDTO">-->
+<!--        <id property="comName" column="NOTICE_CODE_PK"/>-->
+<!--        <result property="noticeCodePk" column=""/>-->
+<!--        <result property="title" column=""/>-->
+<!--        <result property="recruitStartDate" column=""/>-->
+<!--        <result property="recruitEndDate" column=""/>-->
+<!--        <result property="career" column=""/>-->
+<!--        <result property="education" column=""/>-->
+<!--        <result property="education" column=""/>-->
+<!--        <result property="annualIncome" column=""/>-->
+<!--        <result property="annualIncome" column=""/>-->
+<!--        <result property="entLocation" column=""/>-->
+<!--        <result property="numEmp" column=""/>-->
+<!--        <result property="comAddress" column=""/>-->
+<!--        <result property="numEmp" column=""/>-->
+<!--        <result property="comAddress" column=""/>-->
+<!--        <result property="comUrl" column=""/>-->
+<!--        <result property="preference" column=""/>-->
+<!--        <result property="benefits" column=""/>-->
+<!--        <result property="content" column=""/>-->
+<!--        <result property="isClose" column=""/>-->
+<!--        <result property="postStartDate" column=""/>-->
+<!--        <result property="postEndDate" column=""/>-->
+<!--        <result property="postingTime" column=""/>-->
+<!--        <result property="companyCodeFk" column=""/>-->
+<!--        <collection property="skillSortationCode" javaType="java.util.List" ofType="string">-->
+<!--            <result column="SKILL_NAME"/>-->
+<!--        </collection>-->
+<!--        <collection property="jobSortationCode" javaType="java.util.List" ofType="string">-->
+<!--            <result column="JOB_NAME"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+    <!--    private String comName;//기업명-->
+    <!--    private int noticeCodePk;//구직공고코드-->
+    <!--    private String title; // 구직공고제목-->
+    <!--    private java.util.Date recruitStartDate; //모집시작일-->
+    <!--    private java.util.Date recruitEndDate;//모집종료일-->
+    <!--    private String career;//경력-->
+    <!--    private String education; //학력-->
+    <!--    private List<String> skillSortationCode; //기술구분코드-->
+    <!--    private List<String> jobSortationCode; //직무구분코드-->
+    <!--    private int annualIncome; //연봉-->
+    <!--    private String entLocation; //근무위치-->
+    <!--    private int numEmp;//사원수-->
+    <!--    private String comAddress;//기업주소-->
+    <!--    private String comUrl;//홈페이지-->
+    <!--    private String preference; //우대사항-->
+    <!--    private String benefits;//복지사항-->
+    <!--    private String content; // 구직공고내용-->
+    <!--    private String isClose;//마감여부-->
+    <!--    private java.util.Date postStartDate; //게시일-->
+    <!--    private java.util.Date postEndDate; //게시종료일-->
+    <!--    private int postingTime;//게시시간-->
+    <!--    private int companyCodeFk;//기업코드 -->
+
+<select id="selectJobSearchList" resultType="JobSearchListDTO">
+    SELECT
+        A.TITLE,
+        A.CONTENT,
+        A.EDUCATION,
+        A.CAREER,
+        A.PREFERENCE,
+        A.SKILL_SORTATION_CODE,
+        A.JOB_SORTATION_CODE,
+        A.ANNUAL_INCOME,
+        A.ENT_LOCATION,
+        A.RECRUIT_START_DATE,
+        A.RECRUIT_END_DATE,
+        A.APPLICANT,
+        A.IS_CLOSE,
+        A.POST_START_DATE,
+        A.POST_END_DATE,
+        A.POSTING_TIME,
+        A.COMPANY_CODE_FK,
+        A.NOTICE_CODE_PK,
+        B.COM_NAME
+    FROM TBL_JS_NOTICE A
+             JOIN TBL_COM_COMPANY B
+                  ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
+    WHERE A.POST_START_DATE IS NOT NULL
+    AND A.IS_DELETED = 'N'
+    AND (A.TITLE LIKE '%'||#{search}||'%'
+    OR B.COM_NAME LIKE '%'||#{search}||'%')
+    ORDER BY POST_START_DATE
+</select>
+
+    <select id="selectMyJobSearchList" resultType="JobSearchListDTO">
+        SELECT
+            A.TITLE,
+            A.CONTENT,
+            A.EDUCATION,
+            A.CAREER,
+            A.PREFERENCE,
+            A.SKILL_SORTATION_CODE,
+            A.JOB_SORTATION_CODE,
+            A.ANNUAL_INCOME,
+            A.ENT_LOCATION,
+            A.RECRUIT_START_DATE,
+            A.RECRUIT_END_DATE,
+            A.APPLICANT,
+            A.IS_CLOSE,
+            A.POST_START_DATE,
+            A.POST_END_DATE,
+            A.POSTING_TIME,
+            A.COMPANY_CODE_FK,
+            A.NOTICE_CODE_PK,
+            B.COM_NAME
+        FROM TBL_JS_NOTICE A
+                 JOIN TBL_COM_COMPANY B
+                      ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
+        WHERE A.COMPANY_CODE_FK = #{companyCodeFk}
+        AND A.IS_DELETED = 'N'
+        ORDER BY POST_START_DATE
+    </select>
+
+    <select id="selectJobSearchDetailsByCode" resultType="JobSearchDetailsDTO">
+        SELECT
+                B.COM_NAME,
+                A.NOTICE_CODE_PK,
+                A.TITLE,
+                A.RECRUIT_START_DATE,
+                A.RECRUIT_END_DATE,
+                A.CAREER,
+                A.EDUCATION,
+                A.ANNUAL_INCOME,
+                A.ENT_LOCATION,
+                B.NUM_EMP,
+                B.COM_ADDRESS,
+                B.COM_URL,
+                A.PREFERENCE,
+                B.BENEFITS,
+                A.CONTENT,
+                A.IS_CLOSE,
+                A.POST_START_DATE,
+                A.POST_END_DATE,
+                A.POSTING_TIME,
+                A.COMPANY_CODE_FK,
+                A.SKILL_SORTATION_CODE,
+                A.JOB_SORTATION_CODE
+            FROM TBL_JS_NOTICE A
+            LEFT JOIN TBL_COM_COMPANY B ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
+--             LEFT JOIN TBL_JS_SKILL_SELLECTION C ON A.NOTICE_CODE_PK = C.NOTICE_CODE_PK_FK
+--             LEFT JOIN TBL_JS_SKILL_SORTATION D ON C.SKILL_SORTATION_CODE_PK_FK = D.SKILL_NAME
+--             LEFT JOIN TBL_JS_JOB_SELECTION E  ON A.NOTICE_CODE_PK = E.NOTICE_CODE_PK_FK
+--             LEFT JOIN TBL_JS_JOB_SORTATION F ON E.JOB_SORTATION_CODE_PK_FK = F.JOB_NAME
+            WHERE A.NOTICE_CODE_PK = #{noticecode}
+    </select>
+<!--<select id="selectJobSearchDetailsByCode" resultMap="JobSearchDetailsDTOResultMap">-->
+<!--    SELECT-->
+<!--        B.COM_NAME,-->
+<!--        A.NOTICE_CODE_PK,-->
+<!--        A.TITLE,-->
+<!--        A.RECRUITE_START_DATE,-->
+<!--        A.RECRUITE_END_DATE,-->
+<!--        A.CAREER,-->
+<!--        A.EDUCATION,-->
+<!--        A.ANNUAL_INCOME,-->
+<!--        A.ENT_LOCATION,-->
+<!--        B.NUM_EMP,-->
+<!--        B.COM_ADDRESS,-->
+<!--        B.COM_URL,-->
+<!--        A.PREFERENCE,-->
+<!--        B.BENEFITS,-->
+<!--        B.CONTENT,-->
+<!--        A.IS_CLOSE,-->
+<!--        A.POST_START_DATE,-->
+<!--        A.POST_END_DATE,-->
+<!--        A.POST_TIME,-->
+<!--        A.COMPANY_CODE_FK,-->
+<!--        A.SKILL_SORTATION_CODE,-->
+<!--        A.JOB_SORTATION_CODE,-->
+<!--        (SELECT LISTAGG(D.SKILL_NAME,',') WITH GROUP(ORDER BY D.SKILL_NAME) FROM D WHERE SKILL_SORTATION_CODE_PK IN (SELECT SKILL_SORATION_CODE_PK_FK FROM C) ) AS SKILL_NAME,-->
+<!--        (SELECT LISTAGG(F.JOB_NAME,',') WITH GROUP(ORDER BY F,JOB_NAME) FROM F WHERE JOB_SORTATION_CODE_PK IN (SELECT JOB_SORTATION_CODE_PK_FK FROM E)) AS JOB_NAME-->
+<!--    FROM TBL_JS_NOTICE A-->
+<!--    LEFT JOIN TBL_COM_COMPANY B ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK-->
+<!--    LEFT JOIN TBL_JS_SKILL_SELLECTION C ON A.NOTICE_CODE_PK = C.NOTICE_CODE_PK_FK-->
+<!--    LEFT JOIN TBL_JS_SKILL_SORTATION D ON C.SKILL_SORTATION_CODE_PK_FK = D.SKILL_NAME-->
+<!--    LEFT JOIN TBL_JS_JOB_SELECTION E  ON A.NOTICE_CODE_PK = E.NOTICE_CODE_PK_FK-->
+<!--    LEFT JOIN TBL_JS_JOB_SORTATION F ON E.JOB_SORTATION_CODE_PK_FK = F.JOB_NAME-->
+<!--   ORDER BY POST_START_DATE-->
+
+
+<!--</select>-->
+<!--    private String comName;//기업명-->
+<!--    private int noticeCodePk;//구직공고코드-->
+<!--    private String title; // 구직공고제목-->
+<!--    private java.util.Date recruitStartDate; //모집시작일-->
+<!--    private java.util.Date recruitEndDate;//모집종료일-->
+<!--    private String career;//경력-->
+<!--    private String education; //학력-->
+<!--    private List<String> skillSortationCode; //기술구분코드-->
+<!--    private List<String> jobSortationCode; //직무구분코드-->
+<!--    private int annualIncome; //연봉-->
+<!--    private String entLocation; //근무위치-->
+<!--    private int numEmp;//사원수-->
+<!--    private String comAddress;//기업주소-->
+<!--    private String comUrl;//홈페이지-->
+<!--    private String preference; //우대사항-->
+<!--    private String benefits;//복지사항-->
+<!--    private String content; // 구직공고내용-->
+<!--    private String isClose;//마감여부-->
+<!--    private java.util.Date postStartDate; //게시일-->
+<!--    private java.util.Date postEndDate; //게시종료일-->
+<!--    private int postingTime;//게시시간-->
+<!--    private int companyCodeFk;//기업코드 -->
+
+<!--    <insert id="insertJobSearch" parameterType="RegistJobSearchDTO">-->
+<!--        INSERT ALL-->
+<!--        INSERT INTO TBL_JS_NOTICE-->
+<!--        (-->
+<!--         NOTICE_CODE_PK,-->
+<!--          TITLE,-->
+<!--          CONTENT,-->
+<!--         EDUCATION,-->
+<!--         CAREER,-->
+<!--         PREFERENCE,-->
+<!--         ANNUAL_INCOME,-->
+<!--         ENT_LOCATION,-->
+<!--         RECRUIT,START_DATE,-->
+<!--         RECRUIT_END_DATE,-->
+<!--         COMPANY_CODE_FK-->
+<!--        )VALUES-->
+<!--        (-->
+<!--         SEQ_JS_NOTICE_CODE_PK.NEXTVAL,-->
+<!--         #{title},-->
+<!--         #{content},-->
+<!--         #{education},-->
+<!--         #{career},-->
+<!--         #{preference},-->
+<!--         #{annualIncome},-->
+<!--         #{entLocation},-->
+<!--         #{recruitStartDate},-->
+<!--         #{recruitEndDate},-->
+<!--         #{companyCodeFk}-->
+<!--        )-->
+<!--        INSERT INTO TBL_JS_SELF_INTRODUCTION-->
+<!--        <foreach collection="selfIntroList" item="item" open="INSERT ALL" close="" >-->
+<!--        (-->
+<!--        SELF_INTRODUCTION_CODE_PK,-->
+<!--        NOTICE_CODE_FK,-->
+<!--        SELF_INTRODUCTION_CATEGORY-->
+<!--        )-->
+<!--        VALUES-->
+<!--        (-->
+<!--        SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL,-->
+<!--        SEQ_JS_NOTICE_CODE_PK.CURRVAL,-->
+<!--        #{item}-->
+<!--        )-->
+<!--        </foreach>-->
+<!--        </insert>-->
+
+    <insert id="insertJobSearch" parameterType="map">
+        <selectKey keyProperty="registJobSearchDTO.noticeCodePk" resultType="int" order="BEFORE">
+            SELECT SEQ_JS_NOTICE_CODE_PK.NEXTVAl FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_JS_NOTICE
+        (
+        NOTICE_CODE_PK,
+        TITLE,
+        CONTENT,
+        EDUCATION,
+        CAREER,
+        PREFERENCE,
+        ANNUAL_INCOME,
+        ENT_LOCATION,
+        RECRUIT_START_DATE,
+        RECRUIT_END_DATE,
+        COMPANY_CODE_FK,
+        NOTICE_BENEFIT,
+        SKILL_SORTATION_CODE,
+        JOB_SORTATION_CODE
+        )VALUES
+        (
+        #{registJobSearchDTO.noticeCodePk},
+        #{registJobSearchDTO.title},
+        #{registJobSearchDTO.content},
+        #{registJobSearchDTO.education},
+        #{registJobSearchDTO.career},
+        #{registJobSearchDTO.preference},
+        #{registJobSearchDTO.annualIncome},
+        #{registJobSearchDTO.entLocation},
+        #{registJobSearchDTO.recruitStartDate},
+        #{registJobSearchDTO.recruitEndDate},
+        #{companyCodeFk},
+        #{registJobSearchDTO.benefits},
+         999,
+         999
+
+        )
+    </insert >
+    <insert id="insertJobSearchSelfIntro" parameterType="map">
+<!--        <selectKey resultType="_int" keyProperty="SIBAL_CODE" order="BEFORE">-->
+<!--            SELECT-->
+<!--            SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL-->
+<!--                FROM DUAL-->
+<!--        </selectKey>-->
+        insert INTO TBL_JS_SELF_INTRODUCTION
+            (
+            SELF_INTRODUCTION_CODE_PK,
+            NOTICE_CODE_FK,
+            SELF_INTRODUCTION_CATEGORY
+            )
+            VALUES
+            (
+            SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL,
+            #{noticeCode},
+            #{selfIntro}
+            )
+    </insert>
+
+    <select id="selectCompanyCodeFkByMemberCodePk" resultType="int">
+        SELECT
+            C.COMPANY_CODE_PK
+            FROM TBL_MB_MEMBER A
+            JOIN TBL_MB_ENT_MEBER B ON A.MEMBER_CODE_PK = B.MEMBER_CODE_FK
+            JOIN TBL_COM_COMPANY C ON B.COMPANY_CODE_FK = C.COMPANY_CODE_PK
+            WHERE A.MEMBER_CODE_PK = #{memberCodePk}
+    </select>
+
+    <update id="deleteJobSearch" parameterType="int">
+        UPDATE TBL_JS_NOTICE
+        SET
+            IS_DELETED = 'Y'
+        WHERE NOTICE_CODE_PK = #{noticeCode}
+    </update>
+
+    <resultMap id="EditJobSearchResultMap" type="EditJobSearchDTO">
+        <id property="noticeCodePk" column="NOTICE_CODE_PK"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="education" column="EDUCATION"/>
+        <result property="career" column="CAREER"/>
+        <result property="preference" column="PREFERENCE"/>
+        <result property="annualIncome" column="ANNUAL_INCOME"/>
+        <result property="entLocation" column="ENT_LOCATION"/>
+        <result property="recruitStartDate" column="RECRUIT_START_DATE"/>
+        <result property="recruitEndDate" column="RECRUIT_END_DATE"/>
+        <result property="companyCodeFk" column="COMPANY_CODE_FK"/>
+        <result property="benefits" column="NOTICE_BENEFIT"/>
+        <collection property="selfIntroList" resultMap="selfIntroResultMap"/>
+    </resultMap>
+    <resultMap id="selfIntroResultMap" type="QuestionDTO">
+        <id property="selfIntroductionCodePk" column="SELF_INTRODUCTION_CODE_PK"/>
+        <result property="noticeCodeFk" column="NOTICE_CODE_FK"/>
+        <result property="selfIntroductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
+    </resultMap>
+
+
+<select id="selectEditJobSearch" resultMap="EditJobSearchResultMap">
+    SELECT
+        A.NOTICE_CODE_PK,
+        A.TITLE,
+        A.CONTENT,
+        A.EDUCATION,
+        A.CAREER,
+        A.PREFERENCE,
+        A.ANNUAL_INCOME,
+        A.ENT_LOCATION,
+        A.RECRUIT_START_DATE,
+        A.RECRUIT_END_DATE,
+        A.COMPANY_CODE_FK,
+        A.NOTICE_BENEFIT,
+        B.SELF_INTRODUCTION_CODE_PK,
+        B.NOTICE_CODE_FK,
+        B.SELF_INTRODUCTION_CATEGORY
+        FROM TBL_JS_NOTICE A
+        JOIN TBL_JS_SELF_INTRODUCTION B ON A.NOTICE_CODE_PK =  B.NOTICE_CODE_FK
+        WHERE A.NOTICE_CODE_PK = #{noticeCode}
+
+
+</select>
+
+</mapper>
+
