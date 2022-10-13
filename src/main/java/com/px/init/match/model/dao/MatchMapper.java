@@ -8,13 +8,21 @@ import java.util.Map;
 
 @Mapper
 public interface MatchMapper {
-    List<PersonalApplyListDTO> selectPersonalApplyList(RequestListDTO requestListDTO);
+    List<PersonalApplyListDTO> selectPersonalApplyList(PersonalRequestApplyListDTO personalRequestApplyListDTO);
 
     PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map);
 
-    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(RequestListDTO requestListDTO);
+    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(PersonalRequestApplyListDTO personalRequestApplyListDTO);
 
     PersonalSuggestionListDetailDTO selectPersonalSuggestionListDetail(int interviewSuggestionCode);
 
-    int updateInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO);
+    int updatePersonalInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO);
+
+    List<CompanyApplyListDTO> selectCompanyApplyList(CompanyRequestApplyListDTO companyRequestApplyListDTO);
+
+    String getComName(int noticeCode);
+
+    List<String> failureEmailList(NoticeFailureDTO noticeFailureDTO);
+
+    int updateAccepted(NoticeFailureDTO noticeFailureDTO);
 }

@@ -3,7 +3,7 @@ package com.px.init.match.model.dto;
 /**
  * <pre>
  * Class : Sample
- * Comment : 어떤 클래스인지 간단한 설명
+ * Comment : 구직공고의 자기소개서 항목 조회 DTO
  * History
  * 2022-10-07 노재원 처음 작성
  * </pre>
