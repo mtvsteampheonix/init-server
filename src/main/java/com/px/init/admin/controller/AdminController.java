@@ -1,18 +1,13 @@
 package com.px.init.admin.controller;
 
-import com.px.init.admin.mdoel.service.AdminService;
+import com.px.init.admin.model.dto.IsActiveDTO;
+import com.px.init.admin.model.service.AdminService;
 import com.px.init.common.dto.ResponseDTO;
-import com.px.init.email.controller.EmailController;
-import com.px.init.member.model.dto.CompanyMemberDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * <pre>
@@ -47,9 +42,8 @@ public class AdminController {
     }
 
     @PutMapping("/member/company/is-active")
-    public ResponseEntity<ResponseDTO> putCompanyMemberIsActive(@RequestBody Map<String, String> bodyMap) {
-        int memberCodePk = Integer.parseInt(bodyMap.get("memberCodePk"));
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "기업회원 가입 요청 승인 완료", adminService.putCompanyMemberIsActive(memberCodePk)));
+    public ResponseEntity<ResponseDTO> putCompanyMemberIsActive(@RequestBody IsActiveDTO isActive) {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "기업회원 가입 요청 승인 완료", adminService.putCompanyMemberIsActive(isActive)));
     }
 
 }

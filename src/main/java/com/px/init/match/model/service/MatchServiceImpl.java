@@ -85,4 +85,9 @@ public class MatchServiceImpl implements MatchService {
         }
         return message;
     }
+
+    @Override
+    public CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode) {
+        return mapper.selectCompanyApplyDetail(applicationCode);
+    }
 }

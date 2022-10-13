@@ -5,7 +5,7 @@ import com.px.init.exception.EmailException;
 import com.px.init.exception.SignupException;
 import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import com.px.init.member.model.service.AuthServiceImpl;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class AuthController {
      * @return the response entity
      */
     @PostMapping("/signup/personal")
-    public ResponseEntity<ResponseDTO> signup(@RequestBody PersonalMemberDTO personalFormData, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> signup(@RequestBody DefaultMemberDTO personalFormData, HttpServletRequest httpRequest) {
         HttpSession session = httpRequest.getSession(false);
         if (session == null) {
             throw new SignupException("잘못된 접근입니다.");
@@ -140,5 +140,10 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> checkId(@RequestParam(name = "memberId") String inputId) throws DuplicateMemberException {
         System.out.println("inputId = " + inputId);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "중복되지 않는 이메일", authService.checkId(inputId)));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ResponseDTO> resetPassword(@RequestBody MemberDTO member){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "비밀번호 재발급 완료", authService.resetPassword(member)));
     }
 }

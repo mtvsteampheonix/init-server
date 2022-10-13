@@ -6,7 +6,7 @@ import com.px.init.exception.updateException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 import com.px.init.member.model.dto.request.PasswordRequestDTO;
 import com.px.init.member.model.dto.request.UpdatePersonalRequestDTO;
@@ -53,11 +53,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public PersonalMemberDTO findMember() {
+    public DefaultMemberDTO findMember() {
         log.info("[MemberService] findMember START ==========================");
         MemberDTO loginMember = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("[MemberService] loginMember {}", loginMember);
-        PersonalMemberDTO member = new PersonalMemberDTO();
+        DefaultMemberDTO member = new DefaultMemberDTO();
         member.setMemberName(loginMember.getMemberName());
         member.setMemberId(loginMember.getMemberId());
         member.setMemberPw("");
@@ -80,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
             log.info("[MemberService] 비밀번호가 일치하지 않습니다!");
             throw new PasswordException("비밀번호가 일치하지 않습니다.");
         }
-        PersonalMemberDTO updateMember = new PersonalMemberDTO();
+        DefaultMemberDTO updateMember = new DefaultMemberDTO();
         updateMember.setMemberName(updateMemberInfo.getMemberName());
         updateMember.setPhone(updateMemberInfo.getPhone());
         updateMember.setMemberId(loginedMember.getMemberId());
@@ -110,7 +110,7 @@ public class MemberServiceImpl implements MemberService {
             log.info("[MemberService] 비밀번호가 일치하지 않습니다!");
             throw new PasswordException("비밀번호가 일치하지 않습니다.");
         }
-        PersonalMemberDTO patchMember = new PersonalMemberDTO();
+        DefaultMemberDTO patchMember = new DefaultMemberDTO();
         patchMember.setMemberId(loginedMember.getMemberId());
         patchMember.setMemberPw(encoder.encode(passwordPatchInfo.getChangeMemberPw()));
         int result = mapper.updatePassword(patchMember);

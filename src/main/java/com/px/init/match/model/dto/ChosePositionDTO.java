@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class ChosePositionDTO {
     private int resumeCode;
-    private int posDivCode;
+    private PositionDivDTO positionDivDTO;
 
     public ChosePositionDTO() {
     }
 
-    public ChosePositionDTO(int resumeCode, int posDivCode) {
+    public ChosePositionDTO(int resumeCode, PositionDivDTO positionDivDTO) {
         this.resumeCode = resumeCode;
-        this.posDivCode = posDivCode;
+        this.positionDivDTO = positionDivDTO;
     }
 
     public int getResumeCode() {
@@ -34,19 +34,19 @@ public class ChosePositionDTO {
         this.resumeCode = resumeCode;
     }
 
-    public int getPosDivCode() {
-        return posDivCode;
+    public PositionDivDTO getPositionDivDTO() {
+        return positionDivDTO;
     }
 
-    public void setPosDivCode(int posDivCode) {
-        this.posDivCode = posDivCode;
+    public void setPositionDivDTO(PositionDivDTO positionDivDTO) {
+        this.positionDivDTO = positionDivDTO;
     }
 
     @Override
     public String toString() {
         return "ChosePositionDTO{" +
                 "resumeCode=" + resumeCode +
-                ", posDivCode=" + posDivCode +
+                ", positionDivDTO=" + positionDivDTO +
                 '}';
     }
 }
