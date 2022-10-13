@@ -3,9 +3,11 @@ package com.px.init.member.model.service;
 import com.px.init.exception.PasswordException;
 import com.px.init.exception.patchException;
 import com.px.init.exception.updateException;
+import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
+import com.px.init.member.model.dto.TokenDTO;
 import com.px.init.member.model.dto.request.PasswordRequestDTO;
 import com.px.init.member.model.dto.request.UpdatePersonalRequestDTO;
 import org.slf4j.Logger;
@@ -30,23 +32,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class MemberServiceImpl implements MemberService {
-    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    private static final Logger log = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     private MemberMapper mapper;
     private PasswordEncoder encoder;
+    private JwtTokenProvider tokenProvider;
 
+    /**
+     * Instantiates a new Member service.
+     *
+     * @param mapper        the mapper
+     * @param encoder       the encoder
+     * @param tokenProvider the token provider
+     */
     @Autowired
-    public MemberServiceImpl(MemberMapper mapper, PasswordEncoder encoder) {
+    public MemberServiceImpl(MemberMapper mapper, PasswordEncoder encoder, JwtTokenProvider tokenProvider) {
         this.mapper = mapper;
         this.encoder = encoder;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
-    public PersonalMemberDTO findMember() {
+    public DefaultMemberDTO findMember() {
         log.info("[MemberService] findMember START ==========================");
         MemberDTO loginMember = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("[MemberService] loginMember {}", loginMember);
-        PersonalMemberDTO member = new PersonalMemberDTO();
+        DefaultMemberDTO member = new DefaultMemberDTO();
         member.setMemberName(loginMember.getMemberName());
         member.setMemberId(loginMember.getMemberId());
         member.setMemberPw("");
@@ -59,7 +70,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public boolean updateMember(UpdatePersonalRequestDTO updateMemberInfo) {
+    public TokenDTO updateMember(UpdatePersonalRequestDTO updateMemberInfo) {
         log.info("[MemberService] updateMember START ==========================");
         log.info("[MemberService] updateMember {}", updateMemberInfo);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
             log.info("[MemberService] 비밀번호가 일치하지 않습니다!");
             throw new PasswordException("비밀번호가 일치하지 않습니다.");
         }
-        PersonalMemberDTO updateMember = new PersonalMemberDTO();
+        DefaultMemberDTO updateMember = new DefaultMemberDTO();
         updateMember.setMemberName(updateMemberInfo.getMemberName());
         updateMember.setPhone(updateMemberInfo.getPhone());
         updateMember.setMemberId(loginedMember.getMemberId());
@@ -80,8 +91,12 @@ public class MemberServiceImpl implements MemberService {
             throw new updateException("회원정보 수정에 실패하였습니다.");
         }
 //        mapper.updatePersonalMember()
+        // 토큰 발급
+        MemberDTO updatedMember = mapper.selectMemberByMemberId(loginedMember.getMemberId());
+        TokenDTO token = tokenProvider.generateTokenDTO(updatedMember);
+        log.info("[MemberService] tokenDto {}", token);
         log.info("[MemberService] updateMember END ==========================");
-        return true;
+        return token;
     }
 
     @Override
@@ -95,16 +110,33 @@ public class MemberServiceImpl implements MemberService {
             log.info("[MemberService] 비밀번호가 일치하지 않습니다!");
             throw new PasswordException("비밀번호가 일치하지 않습니다.");
         }
-        PersonalMemberDTO patchMember = new PersonalMemberDTO();
+        DefaultMemberDTO patchMember = new DefaultMemberDTO();
         patchMember.setMemberId(loginedMember.getMemberId());
         patchMember.setMemberPw(encoder.encode(passwordPatchInfo.getChangeMemberPw()));
         int result = mapper.updatePassword(patchMember);
-        log.info("[MemberService] patchPassword END =========================== ");
         if(result != 1){
             log.info("[MemberService] 비밀번호 수정 실패");
             throw new patchException("비밀번호 변경에 실패했습니다.");
         }
         log.info("[MemberService] patchPassword END =========================== ");
         return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteMember(String memberPw) {
+        log.info("[MemberService] deleteMember START =========================== ");
+        log.info("[MemberService] memberPw {}", memberPw);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MemberDTO loginedMember = (MemberDTO) authentication.getPrincipal();
+        log.info("[MemberService] loginedMember {}", loginedMember);
+        if(!encoder.matches(memberPw, loginedMember.getPassword())){
+            log.info("[MemberService] 비밀번호가 일치하지 않습니다!");
+            throw new PasswordException("비밀번호가 일치하지 않습니다.");
+        }
+        mapper.deleteMember(loginedMember.getMemberCodePk());
+
+        log.info("[MemberService] deleteMember END =========================== ");
+        return false;
     }
 }

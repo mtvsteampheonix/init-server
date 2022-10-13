@@ -1,8 +1,13 @@
 package com.px.init.member.model.dao;
 
+import com.px.init.admin.model.dto.IsActiveDTO;
+import com.px.init.member.model.dto.CompanyMemberDTO;
+import com.px.init.member.model.dto.EntMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <pre>
@@ -32,7 +37,7 @@ public interface MemberMapper {
      * @param personalFormData the personal form data
      * @return the int
      */
-    int insertPersonalMember(PersonalMemberDTO personalFormData);
+    int insertPersonalMember(DefaultMemberDTO personalFormData);
 
     /**
      * Select member by member id member dto.
@@ -48,7 +53,43 @@ public interface MemberMapper {
      * @param updateMember the update member
      * @return the int
      */
-    int updatePersonalMember(PersonalMemberDTO updateMember);
+    int updatePersonalMember(DefaultMemberDTO updateMember);
 
-    int updatePassword(PersonalMemberDTO patchMember);
+    /**
+     * Update password int.
+     *
+     * @param patchMember the patch member
+     * @return the int
+     */
+    int updatePassword(DefaultMemberDTO patchMember);
+
+    /**
+     * Delete member int.
+     *
+     * @param memberCodePk the member code pk
+     * @return the int
+     */
+    int deleteMember(int memberCodePk);
+
+    /**
+     * Insert company member int.
+     *
+     * @param companyFormData the company form data
+     * @return the int
+     */
+    int insertCompanyMember(CompanyMemberDTO companyFormData);
+
+    EntMemberDTO selectEntMemberByMemberCodeFk(int memberCodePk);
+
+    List<CompanyMemberDTO> selectSignupList();
+
+    int putCompanyMember(EntMemberDTO entMember);
+
+    int getMemberNextSeq();
+
+    CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
+
+    int updateEntMemberIsActive(IsActiveDTO memberCodeFk);
+
+    int setMemberPwTemp(MemberDTO member);
 }

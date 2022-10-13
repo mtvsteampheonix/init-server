@@ -20,8 +20,8 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<PersonalApplyListDTO> selectPersonalApplyList(RequestListDTO requestListDTO) {
-        return mapper.selectPersonalApplyList(requestListDTO);
+    public List<PersonalApplyListDTO> selectPersonalApplyList(PersonalRequestApplyListDTO personalRequestApplyListDTO) {
+        return mapper.selectPersonalApplyList(personalRequestApplyListDTO);
     }
 
     @Override
@@ -30,8 +30,8 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<PersonalSuggestionListDTO> selectPersonalSuggestionList(RequestListDTO requestListDTO) {
-        return mapper.selectPersonalSuggestionList(requestListDTO);
+    public List<PersonalSuggestionListDTO> selectPersonalSuggestionList(PersonalRequestApplyListDTO personalRequestApplyListDTO) {
+        return mapper.selectPersonalSuggestionList(personalRequestApplyListDTO);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public String updateInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception {
+    public String updatePersonalInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception {
 
-        int result = mapper.updateInterviewSuggestionResponse(requestUpdateInterviewSuggestionDTO);
+        int result = mapper.updatePersonalInterviewSuggestionResponse(requestUpdateInterviewSuggestionDTO);
 
         String message = "";
         if(result ==1){
@@ -53,5 +53,41 @@ public class MatchServiceImpl implements MatchService {
             throw new Exception("수정실패");
         }
         return message;
+    }
+
+    @Override
+    public List<CompanyApplyListDTO> selectCompanyApplyList(CompanyRequestApplyListDTO companyRequestApplyListDTO) {
+        return mapper.selectCompanyApplyList(companyRequestApplyListDTO);
+    }
+
+    @Override
+    public String getComName(int noticeCode) {
+        return mapper.getComName(noticeCode);
+    }
+
+    @Override
+    public List<String> failureEmailList(NoticeFailureDTO noticeFailureDTO) {
+        System.out.println("noticeFailureDTO.getNoticeCode() = " + noticeFailureDTO.getNoticeCode());
+        System.out.println("noticeFailureDTO.getNoticeCode() = " + noticeFailureDTO.getApplicationCodeList());
+        return mapper.failureEmailList(noticeFailureDTO);
+    }
+
+    @Override
+    @Transactional
+    public String updateAccepted(NoticeFailureDTO noticeFailureDTO) throws Exception {
+        int result = mapper.updateAccepted(noticeFailureDTO);
+        String message = "";
+        if(result>0){
+            message="success";
+        }else{
+            message="failed";
+            throw new Exception("삐용삐용");
+        }
+        return message;
+    }
+
+    @Override
+    public CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode) {
+        return mapper.selectCompanyApplyDetail(applicationCode);
     }
 }

@@ -1,6 +1,7 @@
 package com.px.init.member.model.service;
 
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
+import com.px.init.member.model.dto.TokenDTO;
 import com.px.init.member.model.dto.request.PasswordRequestDTO;
 import com.px.init.member.model.dto.request.UpdatePersonalRequestDTO;
 
@@ -18,7 +19,8 @@ import com.px.init.member.model.dto.request.UpdatePersonalRequestDTO;
  */
 
 public interface MemberService {
-    PersonalMemberDTO findMember();
-    boolean updateMember(UpdatePersonalRequestDTO personalMemberDTO);
+    DefaultMemberDTO findMember();
+    TokenDTO updateMember(UpdatePersonalRequestDTO personalMemberDTO);
     boolean patchPassword(PasswordRequestDTO passwordPatchInfo);
+    boolean deleteMember(String memberPw);
 }

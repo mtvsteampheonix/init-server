@@ -1,14 +1,17 @@
 package com.px.init.member.model.service;
 
+import com.px.init.company.model.dao.CompanyMapper;
+import com.px.init.company.model.dto.CompanyDTO;
 import com.px.init.email.controller.EmailController;
 import com.px.init.email.model.dto.EmailDTO;
 import com.px.init.exception.DuplicateMemberEmailException;
 import com.px.init.exception.EmailException;
+import com.px.init.exception.SignupException;
+import com.px.init.exception.updateException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
-import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
-import com.px.init.member.model.dto.TokenDTO;
+import com.px.init.member.model.dto.*;
+import com.px.init.util.SecureUtils;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Random;
 
 
@@ -41,24 +46,31 @@ public class AuthServiceImpl implements AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     private final MemberMapper mapper;
+    private final CompanyMapper companyMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final EmailController emailController;
+
+    private final SecureUtils secureUtils;
 
     /**
      * DI 주입을 위한 생성자
      *
      * @param mapper          the mapper
+     * @param companyMapper   the company mapper
      * @param passwordEncoder the password encoder
      * @param tokenProvider   the token provider
      * @param emailController the email controller
+     * @param secureUtils     the secure utils
      */
     @Autowired
-    public AuthServiceImpl(MemberMapper mapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, EmailController emailController) {
+    public AuthServiceImpl(MemberMapper mapper, CompanyMapper companyMapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, EmailController emailController, SecureUtils secureUtils) {
         this.mapper = mapper;
+        this.companyMapper = companyMapper;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.emailController = emailController;
+        this.secureUtils = secureUtils;
     }
 
     /**
@@ -70,22 +82,81 @@ public class AuthServiceImpl implements AuthService {
      */
     @Transactional
     @Override
-    public PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws DuplicateMemberEmailException {
-        log.info("[AuthService] Login START ===================================");
-        log.info("[AuthService] {}", personalFormData);
+    public DefaultMemberDTO signup(DefaultMemberDTO personalFormData) throws DuplicateMemberEmailException {
+        log.info("[AuthService] signup(PersonalMemberDTO) START ===================================");
+        log.info("[AuthService] personalFormData {}", personalFormData);
         if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {
             log.info("[AuthService] 이메일이 중복됩니다.");
             throw new DuplicateMemberEmailException("이메일이 중복됩니다.");
         }
-        log.info("[AuthService] Member Signup Start ==============================");
         personalFormData.setMemberPw(passwordEncoder.encode(personalFormData.getMemberPw()));
         log.info("[AuthService] Member {}", personalFormData);
         int result = mapper.insertPersonalMember(personalFormData);
-        log.info("[AuthService] Member Insert Result {}", result > 0 ? "회원 가입 성공" : "회원 가입 실패");
-        log.info("[AuthService] Signup End ==============================");
+        log.info("[AuthService] Member Insert Result {}", result == 1 ? "회원 가입 성공" : "회원 가입 실패");
+        if (result <= 0) {
+            throw new SignupException("회원가입에 실패했습니다.");
+        }
+        log.info("[AuthService] signup(PersonalMemberDTO) End ==============================");
         return personalFormData;
 
 
+    }
+
+    @Override
+    @Transactional
+    public CompanyMemberDTO signup(CompanyMemberDTO companyFormData) throws DuplicateMemberEmailException {
+        log.info("[AuthService] signup(CompanyMemberDTO) START ===================================");
+        if (mapper.selectMemberByEmail(companyFormData.getEmail()) != null) {
+            log.info("[AuthService] 이메일이 중복됩니다.");
+            throw new DuplicateMemberEmailException("이메일이 중복됩니다.");
+        }
+        companyFormData.setMemberPw(passwordEncoder.encode(companyFormData.getMemberPw()));
+        int seqNo = mapper.getMemberNextSeq();
+        log.info("[AuthService] seqNo {}", seqNo);
+        companyFormData.setMemberCodePk(seqNo);
+        log.info("[AuthService] companyFormData {}", companyFormData);
+        int result = mapper.insertCompanyMember(companyFormData);
+        if (result <= 0) {
+            log.info("[AuthService] Member Insert 회원 가입 실패했습니다.");
+            throw new SignupException("회원가입에 실패했습니다.");
+        }
+        CompanyDTO foundCompany = companyMapper.selectCompanyByRegsitNumber(companyFormData.getRegistNumber());
+        log.info("[AuthService] company {}", foundCompany);
+        EntMemberDTO entMember = new EntMemberDTO();
+        if (foundCompany == null) {
+            log.info("[AuthService] 이미 가입된 기업정보가 없습니다. 기업 정보를 새로 생성합니다.");
+            int comSeq = companyMapper.getCompanyNextSeq();
+            log.info("[AuthService] comSeq {}", comSeq);
+            CompanyDTO insertCompany = new CompanyDTO();
+            insertCompany.setCompanyCodePk(comSeq);
+            insertCompany.setComName(companyFormData.getComName());
+            insertCompany.setRegistNumber(companyFormData.getRegistNumber());
+            insertCompany.setComUrl(companyFormData.getComUrl());
+            log.info("[AuthService] insertCompany {}", insertCompany);
+            int insertCompanyResult = companyMapper.insertCompany(insertCompany);
+            log.info("[AuthService] insertCompanyResult {}", insertCompanyResult);
+            if (insertCompanyResult < 0) {
+                log.info("[AuthService] 회사 레코드 생성에 실패했습니다.");
+                throw new SignupException("회원가입에 실패했습니다.");
+            }
+            log.info("[AuthService] 기업코드 관계 형성");
+            entMember.setMemberCodeFk(seqNo);
+            entMember.setCompanyCodeFk(insertCompany.getCompanyCodePk());
+        } else {
+            log.info("[AuthService] 이미 기업정보가 있습니다.");
+            log.info("[AuthService] 기업코드 관계 형성");
+            entMember.setMemberCodeFk(seqNo);
+            entMember.setCompanyCodeFk(foundCompany.getCompanyCodePk());
+        }
+        log.info("[AuthService] entMember {}", entMember);
+        int putCompanyResult = mapper.putCompanyMember(entMember);
+        log.info("[AuthService] result {}", putCompanyResult);
+        if (putCompanyResult < 0) {
+            log.info("[AuthService] 회원가입에 실패했습니다.");
+            throw new SignupException("회원가입에 실패했습니다.");
+        }
+        log.info("[AuthService] signup(CompanyMemberDTO) End ==============================");
+        return null;
     }
 
     /**
@@ -95,7 +166,7 @@ public class AuthServiceImpl implements AuthService {
      * @return the token dto
      */
     @Override
-    public TokenDTO login(MemberDTO memberDTO) throws LoginException {
+    public TokenDTO login(MemberDTO memberDTO, HttpServletResponse response) throws LoginException, IOException {
         log.info("[AuthService] Login Start ===================================");
         log.info("[AuthService] {}", memberDTO);
 
@@ -105,11 +176,23 @@ public class AuthServiceImpl implements AuthService {
         if (member == null) {
             throw new LoginException("없는 아이디입니다.");
         }
-
         // 비밀번호 매칭
         if (!passwordEncoder.matches(memberDTO.getMemberPw(), member.getMemberPw())) {
             log.info("[AuthService] Password Match Fail");
-            throw new LoginException("잘못된 아이디 또는 비밀번호 입니다.");
+            response.sendError(400, "잘못된 아이디 또는 비밀번호 입니다.");
+//            throw new LoginException("잘못된 아이디 또는 비밀번호 입니다.");
+        }
+        if (member.getMemberRole().get(0).getAuthority().getAuthorityName().equals("ROLE_COMPANY")) {
+            log.info("[AuthService] companyMember ");
+            EntMemberDTO memberCompanyInfo = mapper.selectEntMemberByMemberCodeFk(member.getMemberCodePk());
+            log.info("[AuthService] memberCompanyInfo {}", memberCompanyInfo);
+            if (memberCompanyInfo.getIsActive() == 'N') {
+                log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
+                response.sendError(403, "거절된 회원입니다. 관리자에게 문의하세요");
+            } else if (memberCompanyInfo.getIsActive() == 0) {
+                log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
+                response.sendError(403, "아직 승인되지 않은 회원입니다. 관리자에게 문의하세요");
+            }
         }
 
         // 토큰 발급
@@ -177,6 +260,44 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateMemberException("이미 가입된 아이디 입니다!");
         }
         log.info("[AuthService] checkId End ===================================");
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean resetPassword(MemberDTO member) {
+        log.info("[AuthService] resetPassword START ===========================");
+        MemberDTO foundMember = mapper.selectMemberByEmail(member.getEmail());
+        if (foundMember == null) {
+            log.info("[AuthService] 이메일이 존재하지 않습니다.");
+            throw new DuplicateMemberEmailException("이메일이 존재하지 않습니다.");
+        }
+        if (!foundMember.getMemberName().equals(member.getMemberName())) {
+            log.info("[AuthService] 이름이 일치하지 않습니다.");
+            throw new DuplicateMemberEmailException("이름이 일치하지 않습니다.");
+        }
+        if (!foundMember.getMemberId().equals(member.getMemberId())) {
+            log.info("[AuthService] 아이디가 일치하지 않습니다.");
+            throw new DuplicateMemberEmailException("아이디가 일치하지 않습니다.");
+        }
+        String tempPassword = secureUtils.getRamdomPassword(10);
+        foundMember.setMemberPw(passwordEncoder.encode(tempPassword));
+        log.info("[AuthService] foundMember {}", foundMember);
+        int result = mapper.setMemberPwTemp(foundMember);
+        if(result <= 0 ) {
+            log.info("[AuthService] setMeberPwTemp 매퍼 오류");
+            throw new updateException("임시비밀번호 발급 실패");
+        }
+
+        log.info("[AuthService] 임시비밀번호 이메일 전송 시작");
+        String title = "INIT 서비스 임시비밀번호 발급 안내입니다.";
+        String content = "<div align='center'>" +
+                "<h1>임시 비밀번호 발급 안내입니다.</h1>" +
+                "<h3>임시 비밀번호로 로그인해주세요</h3>" +
+                "<div><p><bold>CODE :<bold><span>" + tempPassword + "</span> </p></div>";
+        emailController.sendEmail(new EmailDTO(foundMember.getEmail(), title, content));
+        log.info("[AuthService] 임시비밀번호 이메일 전송 완료");
+        log.info("[AuthService] resetPassword END ===========================");
         return true;
     }
 

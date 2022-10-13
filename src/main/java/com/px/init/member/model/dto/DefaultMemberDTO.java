@@ -12,17 +12,17 @@ package com.px.init.member.model.dto;
  * @version 1.0
  * @see 참고할class나 외부 url
  */
-public class PersonalMemberDTO {
+public class DefaultMemberDTO {
     private String memberId;
     private String memberPw;
     private String memberName;
     private String email;
     private String phone;
 
-    public PersonalMemberDTO() {
+    public DefaultMemberDTO() {
     }
 
-    public PersonalMemberDTO(String memberId, String memberPw, String memberName, String email, String phone) {
+    public DefaultMemberDTO(String memberId, String memberPw, String memberName, String email, String phone) {
         this.memberId = memberId;
         this.memberPw = memberPw;
         this.memberName = memberName;

@@ -7,13 +7,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface MatchService {
-    List<PersonalApplyListDTO> selectPersonalApplyList(RequestListDTO requestListDTO);
+    List<PersonalApplyListDTO> selectPersonalApplyList(PersonalRequestApplyListDTO personalRequestApplyListDTO);
 
     PersonalApplyDetailDTO selectPersonalApplyDetail(Map<String, Integer> map);
 
-    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(RequestListDTO requestListDTO);
+    List<PersonalSuggestionListDTO> selectPersonalSuggestionList(PersonalRequestApplyListDTO personalRequestApplyListDTO);
 
     PersonalSuggestionListDetailDTO selectPersonalSuggestionListDetail(int interviewSuggestionCode);
 
-    String updateInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception;
+    String updatePersonalInterviewSuggestionResponse(RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception;
+
+    List<CompanyApplyListDTO> selectCompanyApplyList(CompanyRequestApplyListDTO companyRequestApplyListDTO);
+
+    String getComName(int noticeCode);
+
+    List<String> failureEmailList(NoticeFailureDTO noticeFailureDTO);
+
+    String updateAccepted(NoticeFailureDTO noticeFailureDTO) throws Exception;
+
+    CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode);
 }

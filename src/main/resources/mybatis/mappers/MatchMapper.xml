@@ -45,6 +45,76 @@
         <result property="description" column="DESCRIPTION"/>
     </resultMap>
 
+    <resultMap id="companyApplyList" type="com.px.init.match.model.dto.CompanyApplyListDTO">
+        <id property="applicationCode" column="APPLICATION_CODE_PK"/>
+        <result property="isAccepted" column="IS_ACCEPTED"/>
+        <result property="applicationDate" column="APPLICATION_DATE"/>
+        <result property="noticeTitle" column="aTITLE"/>
+        <result property="resumeTitle" column="bTITLE"/>
+        <result property="personalName" column="PERSONAL_NAME"/>
+    </resultMap>
+
+
+<!--////////////////////////-->
+    <resultMap id="chosePositionDTO" type="com.px.init.match.model.dto.ChosePositionDTO">
+        <id property="resumeCode" column="RESUME_CODE_PK_FK"/>
+        <association property="positionDivDTO" resultMap="positionDivDTO"/>
+    </resultMap>
+
+    <!--////////////////////////-->
+
+    <resultMap id="companyApplyDetailDTO" type="com.px.init.match.model.dto.CompanyApplyListDetailDTO">
+        <result property="companyCode" column="COMPANY_CODE_FK"/>
+        <result property="resumeTitle" column="TITLE"/>
+        <result property="personalName" column="PERSONAL_NAME"/>
+        <collection property="positionDivDTO" resultMap="positionDivDTO"/>
+        <collection property="choseTechDTO" resultMap="choseTechDTO"/>
+        <collection property="selfIntroductionAnsweredDTO" resultMap="selfIntroductionAnsweredDTO"/>
+    </resultMap>
+
+    <resultMap id="positionDivDTO" type="com.px.init.match.model.dto.PositionDivDTO">
+        <result property="posDivCode" column="POS_DIV_CODE_PK"/>
+        <result property="rsmValue" column="RSM_VALUE"/>
+    </resultMap>
+    
+    <resultMap id="selfIntroductionAnsweredDTO" type="com.px.init.match.model.dto.SelfIntroductionAnsweredDTO">
+        <result property="introductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
+        <result property="answerContent" column="ANSWER_CONTENT"/>
+    </resultMap>
+
+    <resultMap id="choseTechDTO" type="com.px.init.match.model.dto.ChoseTechDTO">
+        <result property="techValue" column="TECH_VALUE"/>
+    </resultMap>
+
+    <select id="getComName" resultType="string">
+        SELECT
+               B.COM_NAME
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode}
+    </select>
+
+    <select id="failureEmailList" resultType="string">
+        SELECT
+               C.EMAIL
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_JS_APPLICATION B ON (A.NOTICE_CODE_PK = B.NOTICE_CODE_FK)
+          JOIN TBL_MB_MEMBER C ON (C.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode} AND
+               B.APPLICATION_CODE_PK IN
+               <foreach collection="applicationCodeList" item="applicationCode" open="(" close=")" separator=",">
+                   #{applicationCode}
+               </foreach>
+    </select>
+
+    <update id="updateAccepted">
+        UPDATE TBL_JS_APPLICATION
+           SET IS_ACCEPTED = 'N'
+         WHERE APPLICATION_CODE_PK IN
+        <foreach collection="applicationCodeList" item="applicationCode" open="(" close=")" separator=",">
+            #{applicationCode}
+        </foreach>
+    </update>
 
     <select id="selectPersonalApplyList" resultMap="personalApplyList">
         SELECT
@@ -128,4 +198,68 @@
          WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
     </update>
 
+
+    <select id="selectCompanyApplyList" resultMap="companyApplyList">
+        SELECT A.APPLICATION_CODE_PK
+             , A.IS_ACCEPTED
+             , A.APPlICATION_DATE
+             , B.TITLE as aTITLE
+             , C.TITLE as bTITLE
+             , C.PERSONAL_NAME
+             , TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK))
+          FROM TBL_JS_APPLICATION A
+          JOIN TBL_JS_NOTICE B ON(A.NOTICE_CODE_FK = B.NOTICE_CODE_PK)
+          JOIN TBL_RSM_RESUME C ON (A.RESUME_CODE_FK = C.RESUME_CODE_PK)
+         WHERE B.NOTICE_CODE_PK = #{noticeCode}
+         <if test="career != null ">
+             AND (
+            <trim prefix="" prefixOverrides="OR" >
+             <foreach collection="career" item="careerItem">
+                 <if test="careerItem == 'newcomer'">
+                     OR 360 > TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK))
+                 </if>
+                 <if test="careerItem == 'threeYears'">
+                     OR TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK)) > 1095
+                 </if>
+             </foreach>
+            </trim>
+             )
+         </if>
+         <if test="criteria != '' and criteria == 'title'">
+           AND C.TITLE LIKE '%'||#{content}||'%'
+         </if>
+         <if test="criteria != '' and criteria == 'name'">
+           AND PERSONAL_NAME LIKE '%'||#{content}||'%'
+         </if>
+         <if test="isAccepted == 'null'">
+           AND A.IS_ACCEPTED IS NULL
+         </if>
+        OFFSET #{page} ROWS FETCH NEXT 10 ROWS ONLY
+<!--         <if test="isAccepted!=null and isAccepted = 'Y'">-->
+<!--           AND A.IS_ACCEPTED = 'Y'-->
+<!--         </if>-->
+<!--         <if test="isAccepted!=null and isAccepted = 'N'">-->
+<!--           AND A.IS_ACCEPTED = 'N'-->
+<!--         </if>-->
+    </select>
+
+    <select id="selectCompanyApplyDetail" resultMap="companyApplyDetailDTO">
+        SELECT
+               B.TITLE
+             , B.PERSONAL_NAME
+             , D.RSM_VALUE
+             , F.SELF_INTRODUCTION_CATEGORY
+             , E.ANSWER_CONTENT
+             , H.TECH_VALUE
+             , A.NOTICE_CODE_FK
+          FROM TBL_JS_APPLICATION A
+          JOIN TBL_RSM_RESUME B ON (A.RESUME_CODE_FK = B.RESUME_CODE_PK)
+          JOIN TBL_RSM_CHOSE_POSITION C ON (B.RESUME_CODE_PK = C.RESUME_CODE_PK_FK)
+          JOIN TBL_RSM_POSITION_DIV D ON (C.POS_DIV_CODE_PK_FK = D.POS_DIV_CODE_PK)
+          JOIN TBL_JS_SELF_INTRODUCTION_ANSWERED E ON (A.APPLICATION_CODE_PK = E.APPLICATION_CODE_PK_FK)
+          JOIN TBL_JS_SELF_INTRODUCTION F ON (E.SELF_INTRODUCTION_CODE_PK_FK = F.SELF_INTRODUCTION_CODE_PK)
+          JOIN TBL_RSM_CHOSE_TECH G ON (B.RESUME_CODE_PK = G.RESUME_CODE_PK_FK)
+          JOIN TBL_RSM_TECH_DIV H ON (G.TECH_DIV_CODE_PK_FK = H.TECH_DIV_CODE_PK)
+         WHERE A.APPLICATION_CODE_PK = #{applicationCode}
+    </select>
 </mapper>

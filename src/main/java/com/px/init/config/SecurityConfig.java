@@ -59,11 +59,17 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auths/**").permitAll()
                 .antMatchers("/members/**").hasAnyRole("PERSONAL", "COMPANY", "ADMIN")
-//                .antMatchers("/members/**").permitAll()
+                //                .antMatchers("/members/**").permitAll()
                 .antMatchers("/matches/**").permitAll()
-                .antMatchers("/resumes/**").hasAnyRole("PERSONAL", "ADMIN")
+                .antMatchers("/resumes/**").hasAnyRole("PERSONAL")
+                .antMatchers("/admins/**").hasRole("ADMIN")
+
 //                .antMatchers("/members/**").hasAnyRole("ADMIN")
+
+                .antMatchers("/jobsearchs/**").permitAll()
                 .antMatchers("**").denyAll()
+
+
 
                 .and()
                 .cors()
