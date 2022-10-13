@@ -1,6 +1,7 @@
 package com.px.init.resume.model.dto;
 
-import java.lang.reflect.Array;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class TotalResumeDTO {
     private String isOpenedPicture;
     private int imageCode;
     private int memberCode;
+
+    private MultipartFile imgUrl;
 
     // skill stack code
     private List<SkillStackDTO> skillInfoList;
@@ -40,7 +43,7 @@ public class TotalResumeDTO {
     public TotalResumeDTO() {
     }
 
-    public TotalResumeDTO(int resumeCode, String title, String name, String gender, Date birthday, String zipCode, String address, String housePhone, String mobilePhone, String email, String isOpenedPicture, int imageCode, int memberCode, List<SkillStackDTO> skillInfoList, List<DesiredJobDTO> desiredJobInfoList, List<SchoolDTO> schoolInfoList, List<CareerDTO> careerInfoList, List<CoreActivityDTO> coreActivityInfoList, List<ExternalDTO> externalInfoList, List<ForeignLanguageDTO> foreignLanguageInfoList, List<ForeignLanguageAndTestNameDTO> foreignLanguageAndTestNameInfoList, List<TrainingDTO> trainingInfoList, List<QualificationDTO> qualificationInfoList) {
+    public TotalResumeDTO(int resumeCode, String title, String name, String gender, Date birthday, String zipCode, String address, String housePhone, String mobilePhone, String email, String isOpenedPicture, int imageCode, int memberCode, MultipartFile imgUrl, List<SkillStackDTO> skillInfoList, List<DesiredJobDTO> desiredJobInfoList, List<SchoolDTO> schoolInfoList, List<CareerDTO> careerInfoList, List<CoreActivityDTO> coreActivityInfoList, List<ExternalDTO> externalInfoList, List<ForeignLanguageDTO> foreignLanguageInfoList, List<ForeignLanguageAndTestNameDTO> foreignLanguageAndTestNameInfoList, List<TrainingDTO> trainingInfoList, List<QualificationDTO> qualificationInfoList) {
         this.resumeCode = resumeCode;
         this.title = title;
         this.name = name;
@@ -54,6 +57,7 @@ public class TotalResumeDTO {
         this.isOpenedPicture = isOpenedPicture;
         this.imageCode = imageCode;
         this.memberCode = memberCode;
+        this.imgUrl = imgUrl;
         this.skillInfoList = skillInfoList;
         this.desiredJobInfoList = desiredJobInfoList;
         this.schoolInfoList = schoolInfoList;
@@ -170,6 +174,14 @@ public class TotalResumeDTO {
         this.memberCode = memberCode;
     }
 
+    public MultipartFile getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(MultipartFile imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public List<SkillStackDTO> getSkillInfoList() {
         return skillInfoList;
     }
@@ -266,6 +278,7 @@ public class TotalResumeDTO {
                 ", isOpenedPicture='" + isOpenedPicture + '\'' +
                 ", imageCode=" + imageCode +
                 ", memberCode=" + memberCode +
+                ", imgUrl='" + imgUrl + '\'' +
                 ", skillInfoList=" + skillInfoList +
                 ", desiredJobInfoList=" + desiredJobInfoList +
                 ", schoolInfoList=" + schoolInfoList +
@@ -277,5 +290,8 @@ public class TotalResumeDTO {
                 ", trainingInfoList=" + trainingInfoList +
                 ", qualificationInfoList=" + qualificationInfoList +
                 '}';
+    }
+
+    public void setProductImageUrl(String replaceFileName) {
     }
 }
