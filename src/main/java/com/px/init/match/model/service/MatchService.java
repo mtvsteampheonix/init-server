@@ -26,4 +26,8 @@ public interface MatchService {
     String updateAccepted(NoticeFailureDTO noticeFailureDTO) throws Exception;
 
     CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode);
+
+    CompanyInformationDTO selectCompanyInformation(int noticeCode);
+
+    String insertCompanyInterviewSuggestion(InterviewSuggestionDTO interviewSuggestionDTO) throws Exception;
 }

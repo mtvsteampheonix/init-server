@@ -3,10 +3,7 @@ package com.px.init.match.controller;
 import com.px.init.common.dto.ResponseDTO;
 import com.px.init.email.controller.EmailController;
 import com.px.init.email.model.dto.EmailDTO;
-import com.px.init.match.model.dto.CompanyRequestApplyListDTO;
-import com.px.init.match.model.dto.NoticeFailureDTO;
-import com.px.init.match.model.dto.PersonalRequestApplyListDTO;
-import com.px.init.match.model.dto.RequestUpdateInterviewSuggestionDTO;
+import com.px.init.match.model.dto.*;
 import com.px.init.match.model.service.MatchService;
 
 import netscape.javascript.JSObject;
@@ -122,5 +119,15 @@ public class MatchController {
     @GetMapping("/company/apply-detail")
     public ResponseEntity<ResponseDTO> selectCompanyApplyDetail(@RequestParam int applicationCode){
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원자상세조회", matchService.selectCompanyApplyDetail(applicationCode)));
+    }
+
+    @GetMapping("/company/information")
+    public ResponseEntity<ResponseDTO> selectCompanyInformation(@RequestParam int noticeCode){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "기업정보조회", matchService.selectCompanyInformation(noticeCode)));
+    }
+
+    @PostMapping("/company/interview-suggestion")
+    public ResponseEntity<ResponseDTO> insertCompanyInterviewSuggestion(@RequestBody InterviewSuggestionDTO interviewSuggestionDTO) throws Exception {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "개인회원합격처리", matchService.insertCompanyInterviewSuggestion(interviewSuggestionDTO)));
     }
 }

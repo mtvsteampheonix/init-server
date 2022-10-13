@@ -86,6 +86,43 @@
         <result property="techValue" column="TECH_VALUE"/>
     </resultMap>
 
+    <resultMap id="company" type="com.px.init.match.model.dto.CompanyInformationDTO">
+        <id property="companyCode" column="COMPANY_CODE_PK"/>
+        <result property="numEmp" column="NUM_EMP"/>
+        <result property="comAddress" column="COM_ADDRESS"/>
+        <result property="avgSalary" column="AVG_SALARY"/>
+        <result property="benefits" column="BENEFITS"/>
+        <result property="comIntro" column="COM_INTRO"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="repName" column="REP_NAME"/>
+        <result property="registNumber" column="REGIST_NUMBER"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="isDeleted" column="IS_DELETED"/>
+        <result property="isRevealed" column="IS_REVEALED"/>
+        <result property="isApproved" column="IS_APPROVED"/>
+        <result property="phone" column="PHONE"/>
+    </resultMap>
+    <select id="getCompanyCode" resultType="_int">
+        SELECT
+               B.COMPANY_CODE_FK
+          FROM TBL_JS_APPLICATION A
+          JOIN TBL_JS_NOTICE B ON (A.NOTICE_CODE_FK=B.NOTICE_CODE_PK)
+         WHERE A.APPLICATION_CODE_PK = #{applicationCode}
+    </select>
+    <select id="selectCompanyInformation" resultMap="company">
+        SELECT
+               B.COMPANY_CODE_PK
+             , B.COM_NAME
+             , B.COM_ADDRESS
+             , B.COM_URL
+             , B.NUM_EMP
+             , D.PHONE
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+          JOIN TBL_MB_ENT_MEBER C ON (B.COMPANY_CODE_PK = C.COMPANY_CODE_FK)
+          JOIN TBL_MB_MEMBER D ON (C.MEMBER_CODE_FK= D.MEMBER_CODE_PK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode}
+    </select>
     <select id="getComName" resultType="string">
         SELECT
                B.COM_NAME
@@ -192,7 +229,7 @@
          WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
     </select>
 
-    <update id="updateInterviewSuggestionResponse">
+    <update id="updatePersonalInterviewSuggestionResponse">
         UPDATE TBL_MT_INTERVIEW_SUGGESTION A
            SET A.SUGGESTION_RESPONSE = #{response}
          WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
@@ -262,4 +299,33 @@
           JOIN TBL_RSM_TECH_DIV H ON (G.TECH_DIV_CODE_PK_FK = H.TECH_DIV_CODE_PK)
          WHERE A.APPLICATION_CODE_PK = #{applicationCode}
     </select>
+
+    <insert id="insertCompanyInterviewSuggestion">
+        INSERT INTO TBL_MT_INTERVIEW_SUGGESTION A
+        (
+          A.INTERVIEW_SUGGESTION_CODE_PK
+        , A.DIVISTION
+        , A.INTERVIEW_DATE
+        , A.DESCRIPTION
+        , A.MEMBER_CODE_FK
+        , A.COMPANY_CODE_FK
+        , A.APPLICATION_CODE_FK
+        )
+        VALUES
+        (
+          SEQ_MT_INTERVIEW_SUGGESTION_CODE_PK.nextval
+        , #{division}
+        , #{interviewDate}
+        , #{description}
+        , #{memberCode}
+        , #{companyCode}
+        , #{applicationCode}
+        )
+    </insert>
+
+    <update id="successAccepted">
+        UPDATE TBL_JS_APPLICATION
+           SET IS_ACCEPTED = 'Y'
+         WHERE APPLICATION_CODE_PK = #{applicationCode}
+    </update>
 </mapper>
