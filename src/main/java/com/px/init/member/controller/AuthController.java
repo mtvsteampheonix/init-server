@@ -7,6 +7,7 @@ import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.service.AuthServiceImpl;
+import com.px.init.member.model.service.MemberService;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -140,5 +141,10 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> checkId(@RequestParam(name = "memberId") String inputId) throws DuplicateMemberException {
         System.out.println("inputId = " + inputId);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "중복되지 않는 이메일", authService.checkId(inputId)));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ResponseDTO> resetPassword(@RequestBody MemberDTO member){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "비밀번호 재발급 완료", authService.resetPassword(member)));
     }
 }

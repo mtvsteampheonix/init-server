@@ -45,6 +45,7 @@ public interface AuthService {
      * 로그인 서비스
      *
      * @param memberDTO the member dto
+     * @param response  the response
      * @return the token dto
      * @throws Exception the exception
      */
@@ -77,4 +78,11 @@ public interface AuthService {
      */
     boolean checkId(String inputId) throws Exception;
 
+    /**
+     * Reset password boolean.
+     *
+     * @param member the member
+     * @return the boolean
+     */
+    boolean resetPassword(MemberDTO member);
 }

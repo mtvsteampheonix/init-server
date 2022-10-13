@@ -93,7 +93,10 @@
 
     <select id="selectMemberByEmail" resultType="MemberDTO">
         SELECT
-               A.MEMBER_ID
+               A.MEMBER_CODE_PK
+             , A.MEMBER_ID
+             , A.EMAIL
+             , A.MEMBER_NAME
           FROM TBL_MB_MEMBER A
          WHERE A.IS_WITHDRAWAL = 'N'
            AND A.EMAIL = #{email}
@@ -161,6 +164,7 @@
     <update id="updatePassword" parameterType="PersonalMemberDTO">
         UPDATE TBL_MB_MEMBER A
            SET A.MEMBER_PW = #{memberPw}
+             , A.PW_IS_TEMP ='N'
          WHERE A.IS_WITHDRAWAL = 'N'
            AND A.MEMBER_ID = #{memberId}
     </update>
@@ -252,5 +256,13 @@
         UPDATE TBL_MB_ENT_MEBER A
            SET A.IS_ACTIVE = 'Y'
          WHERE A.MEMBER_CODE_FK = #{memberCodeFk}
+    </update>
+
+    <update id="setMemberPwTemp" parameterType="MemberDTO">
+        UPDATE TBL_MB_MEMBER A
+           SET A.MEMBER_PW = #{memberPw}
+             , A.PW_IS_TEMP = 'Y'
+         WHERE A.MEMBER_CODE_PK = #{memberCodePk}
+           AND A.IS_WITHDRAWAL = 'N'
     </update>
 </mapper>

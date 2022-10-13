@@ -89,4 +89,6 @@ public interface MemberMapper {
     CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
 
     int updateEntMemberIsActive(int memberCodeFk);
+
+    int setMemberPwTemp(MemberDTO member);
 }
