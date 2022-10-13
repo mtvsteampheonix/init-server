@@ -2,7 +2,18 @@ package com.px.init.match.model.dto;
 
 import java.sql.Date;
 import java.util.List;
-
+/**
+ * <pre>
+ * Class : Sample
+ * Comment : 개인회원 지원 상세보기 view DTO
+ * History
+ * 2022-10-12 노재원 처음 작성
+ * </pre>
+ *
+ * @author 노재원(최초 작성자 명)
+ * @version 1.0(클래스의 버전)
+ * @see 참고할 class나 외부 url
+ */
 public class PersonalApplyDetailDTO {
     private String comName;
     private String title;

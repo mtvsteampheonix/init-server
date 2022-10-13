@@ -1,5 +1,17 @@
 package com.px.init.match.model.dto;
 
+/**
+ * <pre>
+ * Class : Sample
+ * Comment : 개인회원의 면접 제안서 응답 DTO
+ * History
+ * 2022-10-12 노재원 처음 작성
+ * </pre>
+ *
+ * @author 노재원(최초 작성자 명)
+ * @version 1.0(클래스의 버전)
+ * @see 참고할 class나 외부 url
+ */
 public class RequestUpdateInterviewSuggestionDTO {
     private int interviewSuggestionCode;
     private String response;

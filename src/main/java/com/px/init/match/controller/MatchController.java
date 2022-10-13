@@ -1,17 +1,21 @@
 package com.px.init.match.controller;
 
 import com.px.init.common.dto.ResponseDTO;
-import com.px.init.match.model.dto.RequestListDTO;
+import com.px.init.email.controller.EmailController;
+import com.px.init.email.model.dto.EmailDTO;
+import com.px.init.match.model.dto.CompanyRequestApplyListDTO;
+import com.px.init.match.model.dto.NoticeFailureDTO;
+import com.px.init.match.model.dto.PersonalRequestApplyListDTO;
 import com.px.init.match.model.dto.RequestUpdateInterviewSuggestionDTO;
 import com.px.init.match.model.service.MatchService;
 
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <pre>
@@ -33,6 +37,7 @@ public class MatchController {
      * The Match service.
      */
     MatchService matchService;
+    EmailController emailController;
 
     /**
      * Instantiates a new Match controller.
@@ -40,8 +45,9 @@ public class MatchController {
      * @param matchService the match service
      */
     @Autowired
-    public MatchController(MatchService matchService){
+    public MatchController(MatchService matchService, EmailController emailController){
         this.matchService = matchService;
+        this.emailController = emailController;
     }
 
     /**
@@ -51,8 +57,8 @@ public class MatchController {
      * @return the response entity
      */
     @GetMapping("/personal/apply-list")
-    public ResponseEntity<ResponseDTO> selectPersonalApplyList(@ModelAttribute RequestListDTO requestListDTO){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(requestListDTO)));
+    public ResponseEntity<ResponseDTO> selectPersonalApplyList(@ModelAttribute PersonalRequestApplyListDTO personalRequestApplyListDTO){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "지원내역조회", matchService.selectPersonalApplyList(personalRequestApplyListDTO)));
     }
 
     /**
@@ -72,8 +78,8 @@ public class MatchController {
     }
 
     @GetMapping("/personal/suggestion-list")
-    public ResponseEntity<ResponseDTO> selectPersonalSuggestionList(@ModelAttribute RequestListDTO requestListDTO){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectPersonalSuggestionList(requestListDTO)));
+    public ResponseEntity<ResponseDTO> selectPersonalSuggestionList(@ModelAttribute PersonalRequestApplyListDTO personalRequestApplyListDTO){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "면접제안목록조회", matchService.selectPersonalSuggestionList(personalRequestApplyListDTO)));
     }
 
     @GetMapping("/personal/suggestion-detail")
@@ -82,7 +88,34 @@ public class MatchController {
     }
 
     @PutMapping("/personal/suggestion-response")
-    public ResponseEntity<ResponseDTO> updateInterviewSuggestionResponse(@RequestBody RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception {
-        return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "면접제안응답수정", matchService.updateInterviewSuggestionResponse(requestUpdateInterviewSuggestionDTO))));
+    public ResponseEntity<ResponseDTO> updatePersonalInterviewSuggestionResponse(@RequestBody RequestUpdateInterviewSuggestionDTO requestUpdateInterviewSuggestionDTO) throws Exception {
+        return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "면접제안응답수정", matchService.updatePersonalInterviewSuggestionResponse(requestUpdateInterviewSuggestionDTO))));
+    }
+
+    @GetMapping("/company/apply-list")
+    public ResponseEntity<ResponseDTO> selectCompanyApplyList(@ModelAttribute CompanyRequestApplyListDTO companyRequestApplyListDTO,@RequestParam(required = false) String career) {
+        if (career != null) {
+            String[] list = career.split(",");
+            companyRequestApplyListDTO.setCareer(List.of(list));
+        }
+        return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "지원자목록조회", matchService.selectCompanyApplyList(companyRequestApplyListDTO))));
+    }
+
+
+    @PutMapping("/company/failure")
+    public ResponseEntity<ResponseDTO> updateCompanyNoticeFailure(@RequestBody NoticeFailureDTO noticeFailureDTO) throws Exception {
+        System.out.println("noticeFailureDTO = " + noticeFailureDTO);
+        if(noticeFailureDTO.getApplicationCodeList() != null){
+            String comName = matchService.getComName(noticeFailureDTO.getNoticeCode());
+            List<String> failureEmail = matchService.failureEmailList(noticeFailureDTO);
+            for(String email : failureEmail) {
+                String title = comName + " 회사 면접 결과 입니다.";
+                String message = "<h1>" + comName + "회사에 불합격 하셨습니다</h1>";
+                EmailDTO emailDTO = new EmailDTO(email, title, message);
+                boolean result = emailController.sendEmail(emailDTO);
+            }
+            String message = matchService.updateAccepted(noticeFailureDTO);
+        }
+        return ResponseEntity.ok().body((new ResponseDTO(HttpStatus.OK, "개인회원불합격처리", "전송이 완료되었습니다.")));
     }
 }
