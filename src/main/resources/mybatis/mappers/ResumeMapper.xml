@@ -4,6 +4,301 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.px.init.resume.model.dao.ResumeMapper">
 
+    <resultMap id="skillStackResultMap" type="com.px.init.resume.model.dto.SkillStackDTO">
+        <id property="techDivCode" column="TECH_DIV_CODE_PK"/>
+        <result property="techValue" column="TECH_VALUE"/>
+    </resultMap>
+
+    <resultMap id="desiredJobResultMap" type="com.px.init.resume.model.dto.DesiredJobDTO">
+        <id property="posDivCode" column="POS_DIV_CODE_PK"/>
+        <result property="posValue" column="RSM_VALUE"/>
+    </resultMap>
+
+    <resultMap id="foreignTestResultMap" type="com.px.init.resume.model.dto.ForeignLanguageTestDTO">
+        <id property="testCode" column="TEST_CODE_PK"/>
+        <result property="language" column="FOREIGN_LANGUAGE"/>
+        <result property="testTitle" column="TEST_NAME"/>
+    </resultMap>
+
+    <resultMap id="qualificationDivResultMap" type="com.px.init.resume.model.dto.QualificationDivDTO">
+        <id property="certificateDivCode" column="CERTIFICATE_DIV_CODE_PK"/>
+        <result property="certificateType" column="CERTIFICATE_TYPE"/>
+        <result property="certificateName" column="CERTIFICATE_NAME"/>
+    </resultMap>
+
+    <resultMap id="resumeCodeAndTitleMap" type="com.px.init.resume.model.dto.ResumeCodeAndTitleDTO">
+        <id property="resumeCode" column="RESUME_CODE_PK"/>
+        <result property="title" column="TITLE"/>
+    </resultMap>
+
+    <resultMap id="schoolResultMap" type="com.px.init.resume.model.dto.SchoolDTO">
+        <id property="educationCode" column="EDUCATION_CODE_PK"/>
+        <id property="schoolDivision" column="DIVISION"/>
+        <result property="schoolName" column="SCHOOL_NAME"/>
+        <result property="schoolStartDate" column="START_DATE"/>
+        <result property="schoolEndDate" column="END_DATE"/>
+        <result property="major" column="MAJOR"/>
+        <result property="totalScore" column="TOTAL_SCORE"/>
+        <result property="recordedScore" column="RECORDED_SCORE"/>
+        <result property="schoolStatus" column="STATUS"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="careerResultMap" type="com.px.init.resume.model.dto.CareerDTO">
+        <id property="careerCode" column="CAREER_CODE_PK"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="companyName" column="COMPANY_NAME"/>
+        <result property="nameIsOpened" column="NAME_IS_OPENED"/>
+        <result property="position" column="RSM_POSITION"/>
+        <result property="status" column="RSM_STATUS"/>
+        <result property="task" column="TASK"/>
+        <result property="etc" column="ETC"/>
+        <result property="certificate" column="CERTIFICATE"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="qualificationResultMap" type="com.px.init.resume.model.dto.QualificationDTO">
+        <id property="certificateCode" column="CERTIFICATE_CODE_PK"/>
+        <result property="institution" column="INSTITUTION"/>
+        <result property="acquisitionDate" column="ACQUISITION_DATE"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+        <result property="certificateDivCode" column="CERTIFICATE_DIV_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="trainingResultMap" type="com.px.init.resume.model.dto.TrainingDTO">
+        <id property="trainingCode" column="TRAINING_CODE_PK"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="institution" column="INSTITUTION"/>
+        <result property="course" column="COURSE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="foreignLanguageResultMap" type="com.px.init.resume.model.dto.ForeignLanguageAndTestNameDTO">
+        <id property="abilityCode" column="ABILITY_CODE_PK"/>
+        <result property="grade" column="GRADE"/>
+        <result property="examDate" column="EXAMINATION_DATE"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+        <result property="testDivCode" column="TEST_CODE_FK"/>
+        <result property="testName" column="TEST_NAME"/>
+    </resultMap>
+
+    <resultMap id="externalResultMap" type="com.px.init.resume.model.dto.ExternalDTO">
+        <id property="experienceCode" column="EXP_CODE_PK"/>
+        <result property="division" column="DIVISION"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="nation" column="NATION"/>
+        <result property="institution" column="INSTITUTION"/>
+        <result property="content" column="CONTENT"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="coreActicityResultMap" type="com.px.init.resume.model.dto.CoreActivityDTO">
+        <id property="activityCode" column="ACTIVITY_CODE_PK"/>
+        <result property="division" column="DIVISION"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="institutionName" column="INSTITUTION_NAME"/>
+        <result property="activityName" column="ACTIVITY_NAME"/>
+        <result property="coreActivity" column="CORE_ACTIVITY"/>
+        <result property="resumeCode" column="RESUME_CODE_FK"/>
+    </resultMap>
+
+    <resultMap id="totalResumeResultMap" type="com.px.init.resume.model.dto.TotalResumeDTO">
+        <id property="resumeCode" column="RESUME_CODE_PK"/>
+        <result property="name" column="PERSONAL_NAME"/>
+        <result property="gender" column="GENDER"/>
+        <result property="birthday" column="BIRTH_DATE"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="housePhone" column="HOUSE_PHONE"/>
+        <result property="mobilePhone" column="MOBILE_PHONE"/>
+        <result property="isOpenedPicture" column="PICTURE_IS_OPENED"/>
+        <result property="imageCode" column="IMG_CODE_FK"/>
+        <result property="memberCode" column="MEMBER_CODE_FK"/>
+        <result property="title" column="TITLE"/>
+        <result property="zipCode" column="ZIPCODE"/>
+        <result property="email" column="EMAIL"/>
+        <collection property="schoolInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.SchoolDTO" select="selectSchoolList"/>
+        <collection property="skillInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.SkillStackDTO" select="selectSkillList"/>
+        <collection property="desiredJobInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.DesiredJobDTO" select="selectDesiredList"/>
+        <collection property="careerInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.CareerDTO" select="selectCareerList"/>
+        <collection property="coreActivityInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.CoreActivityDTO" select="selectCoreActivityList"/>
+        <collection property="externalInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.ExternalDTO" select="selectExternalList"/>
+        <collection property="foreignLanguageAndTestNameInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.ForeignLanguageAndTestNameDTO" select="selectForeignList"/>
+        <collection property="trainingInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.TrainingDTO" select="selectTrainingList"/>
+        <collection property="qualificationInfoList" column="resumeCode = RESUME_CODE_PK" javaType="List" ofType="com.px.init.resume.model.dto.QualificationDTO" select="selectQualificationList"/>
+    </resultMap>
+
+    <select id="selectCareerList" resultMap="careerResultMap">
+        SELECT
+               A.CAREER_CODE_PK
+             , A.START_DATE
+             , A.END_DATE
+             , A.COMPANY_NAME
+             , A.NAME_IS_OPENED
+             , A.RSM_POSITION
+             , A.RSM_STATUS
+             , A.TASK
+             , A.ETC
+             , A.CERTIFICATE
+             , A.RESUME_CODE_FK
+         FROM TBL_RSM_CAREER A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectSchoolList" resultMap="schoolResultMap">
+        SELECT
+               A.EDUCATION_CODE_PK
+             , A.DIVISION
+             , A.SCHOOL_NAME
+             , A.START_DATE
+             , A.END_DATE
+             , A.MAJOR
+             , A.STATUS
+             , A.RESUME_CODE_FK
+             , A.TOTAL_SCORE
+             , A.RECORDED_SCORE
+         FROM TBL_RSM_EDUCATION A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectQualificationList" resultMap="qualificationResultMap">
+        SELECT
+               A.CERTIFICATE_CODE_PK
+             , A.INSTITUTION
+             , A.ACQUISITION_DATE
+             , A.RESUME_CODE_FK
+             , A.CERTIFICATE_DIV_CODE_FK
+         FROM TBL_RSM_CERTIFICATE A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectTrainingList" resultMap="trainingResultMap">
+        SELECT
+               A.TRAINING_CODE_PK
+             , A.START_DATE
+             , A.END_DATE
+             , A.INSTITUTION
+             , A.COURSE
+             , A.CONTENT
+             , A.RESUME_CODE_FK
+         FROM TBL_RSM_JOB_TRAINING A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectForeignList" resultMap="foreignLanguageResultMap">
+        SELECT
+               A.ABILITY_CODE_PK
+             , A.GRADE
+             , A.EXAMINATION_DATE
+             , A.RESUME_CODE_FK
+             , A.TEST_CODE_FK
+             , B.TEST_NAME
+         FROM TBL_RSM_FOREIGN_LANGUAGE_ABILITY A
+         JOIN TBL_RSM_FOREIGN_LANGUAGE_TEST B ON(B.TEST_CODE_PK = A.TEST_CODE_FK)
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectExternalList" resultMap="externalResultMap">
+        SELECT
+            A.EXP_CODE_PK
+             , A.DIVISION
+             , A.START_DATE
+             , A.END_DATE
+             , A.NATION
+             , A.INSTITUTION
+             , A.CONTENT
+             , A.RESUME_CODE_FK
+         FROM TBL_RSM_OVERSEAS_EXPERIENCE A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="selectSkillList" resultMap="skillStackResultMap">
+        SELECT
+               B.TECH_DIV_CODE_PK
+             , B.TECH_VALUE
+         FROM TBL_RSM_CHOSE_TECH A
+         JOIN TBL_RSM_TECH_DIV B ON(A.TECH_DIV_CODE_PK_FK = B.TECH_DIV_CODE_PK)
+        WHERE A.RESUME_CODE_PK_FK = #{resumeCode}
+    </select>
+
+    <select id="selectDesiredList" resultMap="desiredJobResultMap">
+        SELECT
+               B.POS_DIV_CODE_PK
+             , B.RSM_VALUE
+         FROM TBL_RSM_CHOSE_POSITION A
+         JOIN TBL_RSM_POSITION_DIV B ON(A.POS_DIV_CODE_PK_FK = B.POS_DIV_CODE_PK)
+        WHERE A.RESUME_CODE_PK_FK = #{resumeCode}
+    </select>
+
+    <select id="selectCoreActivityList" resultMap="coreActicityResultMap">
+        SELECT
+               A.ACTIVITY_CODE_PK
+             , A.DIVISION
+             , A.START_DATE
+             , A.END_DATE
+             , A.INSTITUTION_NAME
+             , A.ACTIVITY_NAME
+             , A.CORE_ACTIVITY
+             , A.RESUME_CODE_FK
+         FROM TBL_RSM_ACTIVITIES A
+        WHERE A.RESUME_CODE_FK = #{resumeCode}
+    </select>
+
+    <select id="findResumeDetail" parameterType="_int" resultMap="totalResumeResultMap">
+        SELECT
+                *
+         FROM TBL_RSM_RESUME A
+        WHERE A.RESUME_CODE_PK = #{resumeCode}
+          AND A.IS_ACTIVATED = 'Y'
+    </select>
+
+    <select id="findSkillList" resultMap="skillStackResultMap">
+        SELECT
+               TECH_DIV_CODE_PK
+             , TECH_VALUE
+          FROM TBL_RSM_TECH_DIV
+         ORDER BY TECH_VALUE
+    </select>
+
+    <select id="findDesiredJobList" resultMap="desiredJobResultMap">
+        SELECT
+               POS_DIV_CODE_PK
+             , RSM_VALUE
+         FROM TBL_RSM_POSITION_DIV
+        ORDER BY RSM_VALUE
+    </select>
+
+    <select id="findForeignTestList" resultMap="foreignTestResultMap">
+        SELECT
+               TEST_CODE_PK
+             , FOREIGN_LANGUAGE
+             , TEST_NAME
+         FROM TBL_RSM_FOREIGN_LANGUAGE_TEST
+        ORDER BY TEST_NAME
+    </select>
+
+    <select id="findQualificationList" resultMap="qualificationDivResultMap">
+        SELECT
+            CERTIFICATE_DIV_CODE_PK
+             , CERTIFICATE_TYPE
+             , CERTIFICATE_NAME
+        FROM TBL_RSM_CERTIFICATE_DIV
+    </select>
+
+    <select id="findResumeCode" parameterType="_int" resultMap="resumeCodeAndTitleMap">
+        SELECT
+               RESUME_CODE_PK
+             , TITLE
+        FROM TBL_RSM_RESUME
+        WHERE MEMBER_CODE_FK = #{memberCode}
+          AND IS_ACTIVATED = 'Y'
+        ORDER BY TITLE
+    </select>
+
     <insert id="registMainResume" parameterType="ResumeDTO">
         INSERT INTO TBL_RSM_RESUME
         (
@@ -57,5 +352,103 @@
         )
     </insert>
 
+    <insert id="registCoreActivityResume" parameterType="CoreActivityDTO">
+        INSERT INTO TBL_RSM_ACTIVITIES
+        (
+           ACTIVITY_CODE_PK, DIVISION, START_DATE
+         , END_DATE, INSTITUTION_NAME, ACTIVITY_NAME
+         , CORE_ACTIVITY, RESUME_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_ACTIVITY_CODE_PK.NEXTVAL, #{division}, #{startDate}
+          , #{endDate}, #{institutionName}, #{activityName}
+          , #{coreActivity}, SEQ_RSM_RESUME_CODE_PK.CURRVAL
+        )
+    </insert>
+
+    <insert id="registExternalResume" parameterType="ExternalDTO">
+        INSERT INTO TBL_RSM_OVERSEAS_EXPERIENCE
+        (
+           EXP_CODE_PK, DIVISION, START_DATE
+         , END_DATE, NATION, INSTITUTION
+         , CONTENT, RESUME_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_EXP_CODE_PK.NEXTVAL, #{division}, #{startDate}
+          , #{endDate}, #{nation}, #{institution}
+          , #{content}, SEQ_RSM_RESUME_CODE_PK.CURRVAL
+        )
+    </insert>
+
+    <insert id="registForeignLanguageResume" parameterType="ForeignLanguageDTO">
+        INSERT INTO TBL_RSM_FOREIGN_LANGUAGE_ABILITY
+        (
+           ABILITY_CODE_PK, GRADE, EXAMINATION_DATE
+         , RESUME_CODE_FK, TEST_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_ABILITY_CODE_PK.NEXTVAL, #{grade}, #{examDate}
+          , SEQ_RSM_RESUME_CODE_PK.CURRVAL, #{testDivCode}
+        )
+    </insert>
+
+    <insert id="registTrainingResume" parameterType="TrainingDTO">
+        INSERT INTO TBL_RSM_JOB_TRAINING
+        (
+           TRAINING_CODE_PK, START_DATE, END_DATE
+         , INSTITUTION, COURSE, CONTENT
+         , RESUME_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_TRAINING_CODE_PK.NEXTVAL, #{startDate}, #{endDate}
+          , #{institution}, #{course}, #{content}
+          , SEQ_RSM_RESUME_CODE_PK.CURRVAL
+        )
+    </insert>
+
+    <insert id="registQualificationResume" parameterType="QualificationDTO">
+        INSERT INTO TBL_RSM_CERTIFICATE
+        (
+           CERTIFICATE_CODE_PK, INSTITUTION, ACQUISITION_DATE
+         , RESUME_CODE_FK, CERTIFICATE_DIV_CODE_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_CERTIFICATE_CODE_PK.NEXTVAL, #{institution}, #{acquisitionDate}
+          , SEQ_RSM_RESUME_CODE_PK.CURRVAL, #{certificateDivCode}
+        )
+    </insert>
+
+    <insert id="registSkillResume" parameterType="SkillStackDTO">
+        INSERT INTO TBL_RSM_CHOSE_TECH
+        (
+            RESUME_CODE_PK_FK, TECH_DIV_CODE_PK_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_RESUME_CODE_PK.CURRVAL, #{techDivCode}
+        )
+    </insert>
+
+    <insert id="registDesiredJobResume" parameterType="DesiredJobDTO">
+        INSERT INTO TBL_RSM_CHOSE_POSITION
+        (
+            RESUME_CODE_PK_FK, POS_DIV_CODE_PK_FK
+        )
+        VALUES
+        (
+            SEQ_RSM_RESUME_CODE_PK.CURRVAL, #{posDivCode}
+        )
+    </insert>
+
+    <delete id="deleteResume" parameterType="_int">
+        UPDATE TBL_RSM_RESUME A
+           SET A.IS_ACTIVATED = 'N'
+         WHERE A.RESUME_CODE_PK = #{resumeCode}
+    </delete>
 
 </mapper>

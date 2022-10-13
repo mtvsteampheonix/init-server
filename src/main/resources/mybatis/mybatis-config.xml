@@ -22,10 +22,19 @@
         <typeAlias type="com.px.init.resume.model.dto.ResumeDTO" alias="ResumeDTO"/>
         <typeAlias type="com.px.init.resume.model.dto.SchoolDTO" alias="SchoolDTO"/>
         <typeAlias type="com.px.init.resume.model.dto.CareerDTO" alias="CareerDTO"/>
+
+        <typeAlias type="com.px.init.resume.model.dto.ExternalDTO" alias="ExternalDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.CoreActivityDTO" alias="CoreActivityDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.ForeignLanguageDTO" alias="ForeignLanguageDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.TrainingDTO" alias="TrainingDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.QualificationDTO" alias="QualificationDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.SkillStackDTO" alias="SkillStackDTO"/>
+        <typeAlias type="com.px.init.resume.model.dto.DesiredJobDTO" alias="DesiredJobDTO"/>
+        <typeAlias type="com.px.init.member.model.dto.PersonalMemberDTO" alias="PersonalMemberDTO"/>
+
         <typeAlias type="com.px.init.member.model.dto.DefaultMemberDTO" alias="DefaultMemberDTO"/>
         <typeAlias type="com.px.init.member.model.dto.EntMemberDTO" alias="EntMemberDTO"/>
         <typeAlias type="com.px.init.company.model.dto.CompanyDTO" alias="CompanyDTO"/>
-
     </typeAliases>
 
     <mappers>

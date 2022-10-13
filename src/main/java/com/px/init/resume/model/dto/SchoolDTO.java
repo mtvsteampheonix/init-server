@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class SchoolDTO {
 
+    private String educationCode;
     private String schoolDivision;
     private String schoolName;
     private Date schoolStartDate;
@@ -18,7 +19,8 @@ public class SchoolDTO {
     public SchoolDTO() {
     }
 
-    public SchoolDTO(String schoolDivision, String schoolName, Date schoolStartDate, Date schoolEndDate, String major, String totalScore, String recordedScore, String schoolStatus, int resumeCode) {
+    public SchoolDTO(String educationCode, String schoolDivision, String schoolName, Date schoolStartDate, Date schoolEndDate, String major, String totalScore, String recordedScore, String schoolStatus, int resumeCode) {
+        this.educationCode = educationCode;
         this.schoolDivision = schoolDivision;
         this.schoolName = schoolName;
         this.schoolStartDate = schoolStartDate;
@@ -28,6 +30,14 @@ public class SchoolDTO {
         this.recordedScore = recordedScore;
         this.schoolStatus = schoolStatus;
         this.resumeCode = resumeCode;
+    }
+
+    public String getEducationCode() {
+        return educationCode;
+    }
+
+    public void setEducationCode(String educationCode) {
+        this.educationCode = educationCode;
     }
 
     public String getSchoolDivision() {
@@ -105,7 +115,8 @@ public class SchoolDTO {
     @Override
     public String toString() {
         return "SchoolDTO{" +
-                "schoolDivision='" + schoolDivision + '\'' +
+                "educationCode='" + educationCode + '\'' +
+                ", schoolDivision='" + schoolDivision + '\'' +
                 ", schoolName='" + schoolName + '\'' +
                 ", schoolStartDate=" + schoolStartDate +
                 ", schoolEndDate=" + schoolEndDate +

@@ -1,10 +1,7 @@
 package com.px.init.resume.model.service;
 
 import com.px.init.resume.model.dao.ResumeMapper;
-import com.px.init.resume.model.dto.CareerDTO;
-import com.px.init.resume.model.dto.ResumeDTO;
-import com.px.init.resume.model.dto.SchoolDTO;
-import com.px.init.resume.model.dto.TotalResumeDTO;
+import com.px.init.resume.model.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,29 +50,115 @@ public class ResumeService {
                 resume.getMemberCode()
         );
 
+        List<SkillStackDTO> skillInfoList = resume.getSkillInfoList();
+        List<DesiredJobDTO> desiredJobInfoList = resume.getDesiredJobInfoList();
         List<SchoolDTO> schoolInfoList = resume.getSchoolInfoList();
         List<CareerDTO> careerInfoList = resume.getCareerInfoList();
+        List<CoreActivityDTO> coreActivityInfoList = resume.getCoreActivityInfoList();
+        List<ExternalDTO> externalInfoList = resume.getExternalInfoList();
+        List<ForeignLanguageDTO> foreignLanguageInfoList = resume.getForeignLanguageInfoList();
+        List<TrainingDTO> trainingInfoList = resume.getTrainingInfoList();
+        List<QualificationDTO> qualificationInfoList = resume.getQualificationInfoList();
+
+        System.out.println("desiredJobInfoList = " + desiredJobInfoList);
+        System.out.println("skillInfoList = " + skillInfoList);
         System.out.println("schoolInfoList = " + schoolInfoList);
         System.out.println("careerInfoList = " + careerInfoList);
+        System.out.println("coreActivityInfoList = " + coreActivityInfoList);
+        System.out.println("externalInfoList = " + externalInfoList);
+        System.out.println("foreignLanguageInfoList = " + foreignLanguageInfoList);
+        System.out.println("trainingInfoList = " + trainingInfoList);
+        System.out.println("qualificationInfoList = " + qualificationInfoList);
 
         int mainResult = mapper.registMainResume(mainInfo);
-//        for(SchoolDTO schoolInfo : schoolInfoList){
-//            int schoolResult = mapper.registSchoolResume(schoolInfo);
-//            if(schoolResult <= 0){
-//                throw new Exception();
-//            }
-//        }
+
+        // 기술 스택
+        for(SkillStackDTO skillCode : skillInfoList){
+            int skillResult = mapper.registSkillResume(skillCode);
+            if(skillResult <= 0 ){
+                throw new Exception();
+            }
+        }
+
+        for(DesiredJobDTO desiredJobCode : desiredJobInfoList){
+            int desiredResult = mapper.registDesiredJobResume(desiredJobCode);
+            if(desiredResult <= 0 ){
+                throw new Exception();
+            }
+        }
+
+        for(SchoolDTO schoolInfo : schoolInfoList){
+            int schoolResult = mapper.registSchoolResume(schoolInfo);
+            if(schoolResult <= 0){
+                throw new Exception();
+            }
+        }
         for(CareerDTO careerInfo : careerInfoList){
             int careerResult = mapper.registCareerResume(careerInfo);
             if(careerResult <= 0){
                 throw new Exception();
             }
         }
-
-//        if(mainResult <= 0 || schoolResult <=0 ){
-//            throw new Exception();
-//        }
+        for(CoreActivityDTO coreActivityInfo : coreActivityInfoList){
+            int coreActivityResult = mapper.registCoreActivityResume(coreActivityInfo);
+            if(coreActivityResult <= 0) {
+                throw new Exception();
+            }
+        }
+        for(ExternalDTO externalInfo : externalInfoList){
+            int externalResult = mapper.registExternalResume(externalInfo);
+            if(externalResult <= 0) {
+                throw new Exception();
+            }
+        }
+        for(ForeignLanguageDTO foreignLanguageInfo : foreignLanguageInfoList){
+            int foreignLanguageResult = mapper.registForeignLanguageResume(foreignLanguageInfo);
+            if(foreignLanguageResult <= 0) {
+                throw new Exception();
+            }
+        }
+        for(TrainingDTO trainingInfo : trainingInfoList){
+            int trainingResult = mapper.registTrainingResume(trainingInfo);
+            if(trainingResult <= 0) {
+                throw new Exception();
+            }
+        }
+        for(QualificationDTO qualificationInfo : qualificationInfoList){
+            int qualificationResult = mapper.registQualificationResume(qualificationInfo);
+            if(qualificationResult <= 0) {
+                throw new Exception();
+            }
+        }
 
         return 1;
+    }
+
+    public List<SkillStackDTO> findSkillList() {
+
+        return mapper.findSkillList();
+    }
+
+    public List<DesiredJobDTO> findDesiredJobList() {
+        return mapper.findDesiredJobList();
+    }
+
+    public List<ForeignLanguageTestDTO> findForeignTestList() {
+        return mapper.findForeignTestList();
+    }
+
+    public List<QualificationDivDTO> findQualificationList() {
+        return mapper.findQualificationList();
+    }
+
+    public List<ResumeCodeAndTitleDTO> findResumeCode(int memberCode) {
+        return mapper.findResumeCode(memberCode);
+    }
+
+    public TotalResumeDTO findResumeDetail(int resumeCode) {
+        return mapper.findResumeDetail(resumeCode);
+    }
+
+    public int deleteResume(int resumeCode) {
+        return mapper.deleteResume(resumeCode);
     }
 }

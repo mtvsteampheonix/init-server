@@ -21,10 +21,10 @@ public class TotalResumeDTO {
     private int memberCode;
 
     // skill stack code
-    private int techCode;
+    private List<SkillStackDTO> skillInfoList;
 
     // 희망 직무 코드
-    private int hopePosCode;
+    private List<DesiredJobDTO> desiredJobInfoList;
 
     // 가져올 리스트
     private List<SchoolDTO> schoolInfoList;
@@ -32,13 +32,15 @@ public class TotalResumeDTO {
     private List<CoreActivityDTO> coreActivityInfoList;
     private List<ExternalDTO> externalInfoList;
     private List<ForeignLanguageDTO> foreignLanguageInfoList;
+
+    private List<ForeignLanguageAndTestNameDTO> foreignLanguageAndTestNameInfoList;
     private List<TrainingDTO> trainingInfoList;
     private List<QualificationDTO> qualificationInfoList;
 
     public TotalResumeDTO() {
     }
 
-    public TotalResumeDTO(int resumeCode, String title, String name, String gender, Date birthday, String zipCode, String address, String housePhone, String mobilePhone, String email, String isOpenedPicture, int imageCode, int memberCode, int techCode, int hopePosCode, List<SchoolDTO> schoolInfoList, List<CareerDTO> careerInfoList, List<CoreActivityDTO> coreActivityInfoList, List<ExternalDTO> externalInfoList, List<ForeignLanguageDTO> foreignLanguageInfoList, List<TrainingDTO> trainingInfoList, List<QualificationDTO> qualificationInfoList) {
+    public TotalResumeDTO(int resumeCode, String title, String name, String gender, Date birthday, String zipCode, String address, String housePhone, String mobilePhone, String email, String isOpenedPicture, int imageCode, int memberCode, List<SkillStackDTO> skillInfoList, List<DesiredJobDTO> desiredJobInfoList, List<SchoolDTO> schoolInfoList, List<CareerDTO> careerInfoList, List<CoreActivityDTO> coreActivityInfoList, List<ExternalDTO> externalInfoList, List<ForeignLanguageDTO> foreignLanguageInfoList, List<ForeignLanguageAndTestNameDTO> foreignLanguageAndTestNameInfoList, List<TrainingDTO> trainingInfoList, List<QualificationDTO> qualificationInfoList) {
         this.resumeCode = resumeCode;
         this.title = title;
         this.name = name;
@@ -52,13 +54,14 @@ public class TotalResumeDTO {
         this.isOpenedPicture = isOpenedPicture;
         this.imageCode = imageCode;
         this.memberCode = memberCode;
-        this.techCode = techCode;
-        this.hopePosCode = hopePosCode;
+        this.skillInfoList = skillInfoList;
+        this.desiredJobInfoList = desiredJobInfoList;
         this.schoolInfoList = schoolInfoList;
         this.careerInfoList = careerInfoList;
         this.coreActivityInfoList = coreActivityInfoList;
         this.externalInfoList = externalInfoList;
         this.foreignLanguageInfoList = foreignLanguageInfoList;
+        this.foreignLanguageAndTestNameInfoList = foreignLanguageAndTestNameInfoList;
         this.trainingInfoList = trainingInfoList;
         this.qualificationInfoList = qualificationInfoList;
     }
@@ -167,20 +170,20 @@ public class TotalResumeDTO {
         this.memberCode = memberCode;
     }
 
-    public int getTechCode() {
-        return techCode;
+    public List<SkillStackDTO> getSkillInfoList() {
+        return skillInfoList;
     }
 
-    public void setTechCode(int techCode) {
-        this.techCode = techCode;
+    public void setSkillInfoList(List<SkillStackDTO> skillInfoList) {
+        this.skillInfoList = skillInfoList;
     }
 
-    public int getHopePosCode() {
-        return hopePosCode;
+    public List<DesiredJobDTO> getDesiredJobInfoList() {
+        return desiredJobInfoList;
     }
 
-    public void setHopePosCode(int hopePosCode) {
-        this.hopePosCode = hopePosCode;
+    public void setDesiredJobInfoList(List<DesiredJobDTO> desiredJobInfoList) {
+        this.desiredJobInfoList = desiredJobInfoList;
     }
 
     public List<SchoolDTO> getSchoolInfoList() {
@@ -223,6 +226,14 @@ public class TotalResumeDTO {
         this.foreignLanguageInfoList = foreignLanguageInfoList;
     }
 
+    public List<ForeignLanguageAndTestNameDTO> getForeignLanguageAndTestNameInfoList() {
+        return foreignLanguageAndTestNameInfoList;
+    }
+
+    public void setForeignLanguageAndTestNameInfoList(List<ForeignLanguageAndTestNameDTO> foreignLanguageAndTestNameInfoList) {
+        this.foreignLanguageAndTestNameInfoList = foreignLanguageAndTestNameInfoList;
+    }
+
     public List<TrainingDTO> getTrainingInfoList() {
         return trainingInfoList;
     }
@@ -255,13 +266,14 @@ public class TotalResumeDTO {
                 ", isOpenedPicture='" + isOpenedPicture + '\'' +
                 ", imageCode=" + imageCode +
                 ", memberCode=" + memberCode +
-                ", techCode=" + techCode +
-                ", hopePosCode=" + hopePosCode +
+                ", skillInfoList=" + skillInfoList +
+                ", desiredJobInfoList=" + desiredJobInfoList +
                 ", schoolInfoList=" + schoolInfoList +
                 ", careerInfoList=" + careerInfoList +
                 ", coreActivityInfoList=" + coreActivityInfoList +
                 ", externalInfoList=" + externalInfoList +
                 ", foreignLanguageInfoList=" + foreignLanguageInfoList +
+                ", foreignLanguageAndTestNameInfoList=" + foreignLanguageAndTestNameInfoList +
                 ", trainingInfoList=" + trainingInfoList +
                 ", qualificationInfoList=" + qualificationInfoList +
                 '}';
