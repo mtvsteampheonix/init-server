@@ -10,6 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
 /**
  * <pre>
  * Class : MemberController
@@ -20,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author 손창우
  * @version 1.0
- * @see 참고할class나외부 url
+ * @see 참고할class나외부url
  */
 @RestController
 @RequestMapping("/members")
@@ -45,7 +50,6 @@ public class MemberController {
      */
     @GetMapping("/personal")
     public ResponseEntity<ResponseDTO> findPersonalMember() {
-        System.out.println("SecurityContextHolder.getContext().getAuthentication().getAuthorities() = " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 조회 완료", memberService.findMember()));
     }
 
@@ -57,8 +61,18 @@ public class MemberController {
      */
     @PutMapping("/personal")
     public ResponseEntity<ResponseDTO> updateMember(@RequestBody UpdatePersonalRequestDTO updatePersonal) {
+//        Cookie[] cookie = request.getCookies();
+//        for (int i = 0; i < cookie.length; i++) {
+//            cookie[i].setMaxAge(0);
+//            response.addCookie(cookie[i]);
+//        }
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 수정 완료", memberService.updateMember(updatePersonal)));
     }
+
+//    @GetMapping("/company")
+//    public ResponseEntity<ResponseDTO> findCompanMember(){
+//
+//    }
 
     /**
      * Patch member password response entity.
@@ -70,6 +84,17 @@ public class MemberController {
     public ResponseEntity<ResponseDTO> patchMemberPassword(@RequestBody PasswordRequestDTO passwordPatchInfo) {
 //        System.out.println("passwordPatchInfo = " + passwordPatchInfo);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "비밀번호 수정 완료", memberService.patchPassword(passwordPatchInfo)));
+    }
 
+    /**
+     * Delete member response entity.
+     *
+     * @param bodyMap the body map
+     * @return the response entity
+     */
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ResponseDTO> deleteMember(@RequestBody Map<String, String> bodyMap) {
+        String memberPw = bodyMap.get("memberPw");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원 탈퇴 완료", memberService.deleteMember(memberPw)));
     }
 }

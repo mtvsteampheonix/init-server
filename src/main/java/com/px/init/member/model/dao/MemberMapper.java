@@ -1,8 +1,12 @@
 package com.px.init.member.model.dao;
 
+import com.px.init.member.model.dto.CompanyMemberDTO;
+import com.px.init.member.model.dto.EntMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <pre>
@@ -50,5 +54,39 @@ public interface MemberMapper {
      */
     int updatePersonalMember(PersonalMemberDTO updateMember);
 
+    /**
+     * Update password int.
+     *
+     * @param patchMember the patch member
+     * @return the int
+     */
     int updatePassword(PersonalMemberDTO patchMember);
+
+    /**
+     * Delete member int.
+     *
+     * @param memberCodePk the member code pk
+     * @return the int
+     */
+    int deleteMember(int memberCodePk);
+
+    /**
+     * Insert company member int.
+     *
+     * @param companyFormData the company form data
+     * @return the int
+     */
+    int insertCompanyMember(CompanyMemberDTO companyFormData);
+
+    EntMemberDTO selectEntMemberByMemberCodeFk(int memberCodePk);
+
+    List<CompanyMemberDTO> selectSignupList();
+
+    int putCompanyMember(EntMemberDTO entMember);
+
+    int getMemberNextSeq();
+
+    CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
+
+    int updateEntMemberIsActive(int memberCodeFk);
 }

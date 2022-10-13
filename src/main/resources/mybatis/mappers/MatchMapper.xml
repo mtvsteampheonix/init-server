@@ -45,6 +45,54 @@
         <result property="description" column="DESCRIPTION"/>
     </resultMap>
 
+    <resultMap id="companyApplyList" type="com.px.init.match.model.dto.CompanyApplyListDTO">
+        <id property="applicationCode" column="APPLICATION_CODE_PK"/>
+        <result property="isAccepted" column="IS_ACCEPTED"/>
+        <result property="applicationDate" column="APPLICATION_DATE"/>
+        <result property="noticeTitle" column="aTITLE"/>
+        <result property="resumeTitle" column="bTITLE"/>
+        <result property="personalName" column="PERSONAL_NAME"/>
+    </resultMap>
+
+    <resultMap id="positionDivDTO" type="com.px.init.match.model.dto.PositionDivDTO">
+        <id property="posDivCode" column="POS_DIV_CODE_PK"/>
+        <result property="rsmValue" column="RSM_VALUE"/>
+    </resultMap>
+
+    <resultMap id="chosePositionDTO" type="com.px.init.match.model.dto.ChosePositionDTO">
+        <id property="resumeCode" column="RESUME_CODE_PK_FK"/>
+        <association property="posDivCode" column="POS_DIV_CODE_PK_FK"/>
+    </resultMap>
+
+    <select id="getComName" resultType="string">
+        SELECT
+               B.COM_NAME
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_COM_COMPANY B ON (A.COMPANY_CODE_FK = B.COMPANY_CODE_PK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode}
+    </select>
+
+    <select id="failureEmailList" resultType="string">
+        SELECT
+               C.EMAIL
+          FROM TBL_JS_NOTICE A
+          JOIN TBL_JS_APPLICATION B ON (A.NOTICE_CODE_PK = B.NOTICE_CODE_FK)
+          JOIN TBL_MB_MEMBER C ON (C.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
+         WHERE A.NOTICE_CODE_PK = #{noticeCode} AND
+               B.APPLICATION_CODE_PK IN
+               <foreach collection="applicationCodeList" item="applicationCode" open="(" close=")" separator=",">
+                   #{applicationCode}
+               </foreach>
+    </select>
+
+    <update id="updateAccepted">
+        UPDATE TBL_JS_APPLICATION
+           SET IS_ACCEPTED = 'N'
+         WHERE APPLICATION_CODE_PK IN
+        <foreach collection="applicationCodeList" item="applicationCode" open="(" close=")" separator=",">
+            #{applicationCode}
+        </foreach>
+    </update>
 
     <select id="selectPersonalApplyList" resultMap="personalApplyList">
         SELECT
@@ -128,4 +176,48 @@
          WHERE A.INTERVIEW_SUGGESTION_CODE_PK = #{interviewSuggestionCode}
     </update>
 
+
+    <select id="selectCompanyApplyList" resultMap="companyApplyList">
+        SELECT A.APPLICATION_CODE_PK
+             , A.IS_ACCEPTED
+             , A.APPlICATION_DATE
+             , B.TITLE as aTITLE
+             , C.TITLE as bTITLE
+             , C.PERSONAL_NAME
+             , TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK))
+          FROM TBL_JS_APPLICATION A
+          JOIN TBL_JS_NOTICE B ON(A.NOTICE_CODE_FK = B.NOTICE_CODE_PK)
+          JOIN TBL_RSM_RESUME C ON (A.RESUME_CODE_FK = C.RESUME_CODE_PK)
+         WHERE B.NOTICE_CODE_PK = #{noticeCode}
+         <if test="career != null ">
+             AND (
+            <trim prefix="" prefixOverrides="OR" >
+             <foreach collection="career" item="careerItem">
+                 <if test="careerItem == 'newcomer'">
+                     OR 360 > TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK))
+                 </if>
+                 <if test="careerItem == 'threeYears'">
+                     OR TRUNC((SELECT SUM(END_DATE - START_DATE) FROM TBL_RSM_CAREER WHERE RESUME_CODE_FK = C.RESUME_CODE_PK GROUP BY RESUME_CODE_FK)) > 1095
+                 </if>
+             </foreach>
+            </trim>
+             )
+         </if>
+         <if test="criteria != '' and criteria == 'title'">
+           AND C.TITLE LIKE '%'||#{content}||'%'
+         </if>
+         <if test="criteria != '' and criteria == 'name'">
+           AND PERSONAL_NAME LIKE '%'||#{content}||'%'
+         </if>
+         <if test="isAccepted == 'null'">
+           AND A.IS_ACCEPTED IS NULL
+         </if>
+        OFFSET #{page} ROWS FETCH NEXT 10 ROWS ONLY
+<!--         <if test="isAccepted!=null and isAccepted = 'Y'">-->
+<!--           AND A.IS_ACCEPTED = 'Y'-->
+<!--         </if>-->
+<!--         <if test="isAccepted!=null and isAccepted = 'N'">-->
+<!--           AND A.IS_ACCEPTED = 'N'-->
+<!--         </if>-->
+    </select>
 </mapper>

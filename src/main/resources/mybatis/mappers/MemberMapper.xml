@@ -32,6 +32,36 @@
         <result property="authorityDesc" column="AUTHORITY_DESC"/>
     </resultMap>
 
+    <resultMap id="companyMemberDTOResultMap" type="com.px.init.member.model.dto.CompanyMemberDTO">
+        <id property="memberCodePk" column="MEMBER_CODE_PK"/>
+        <result property="memberId" column="MEMBER_ID"/>
+        <result property="memberName" column="MEMBER_NAME"/>
+        <result property="signupDate" column="SIGNUP_DATE"/>
+        <result property="phone" column="PHONE"/>
+        <result property="email" column="EMAIL"/>
+        <result property="registNumber" column="REGIST_NUMBER"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="comUrl" column="COM_URL"/>
+        <association property="entMember" resultMap="entMemberDTOResultMap"/>
+    </resultMap>
+
+    <resultMap id="entMemberDTOResultMap" type="com.px.init.member.model.dto.EntMemberDTO">
+        <id property="memberCodeFk" column="MEMBER_CODE_FK"/>
+        <result property="companyCodeFk" column="COMPANY_CODE_FK"/>
+        <result property="remainingPost" column="REMAINING_POST"/>
+        <result property="remainingInquire" column="REMAINING_INQUIRE"/>
+        <result property="isActive" column="IS_ACTIVE"/>
+        <association property="company" resultMap="companyDTOResultMap"/>
+    </resultMap>
+    <resultMap id="companyDTOResultMap" type="com.px.init.company.model.dto.CompanyDTO">
+        <id property="companyCodeFk" column="COMPANY_CODE_FK" />
+        <result property="registNumber" column="REGIST_NUMBER"/>
+        <result property="comName" column="COM_NAME"/>
+        <result property="comUrl" column="COM_URL"/>
+        <result property="isRevealed" column="IS_REVEALED"/>
+        <result property="isApproved" column="IS_APPROVED"/>
+    </resultMap>
+
     <select id="selectMemberByMemberId" resultMap="memberAndRoleAndAuthorityDTOResultMap">
         SELECT
                A.MEMBER_CODE_PK
@@ -57,14 +87,16 @@
           FROM TBL_MB_MEMBER A
           JOIN TBL_MB_MEMBER_ROLE B ON(A.MEMBER_CODE_PK = B.MEMBER_NO_PK_FK)
           JOIN TBL_MB_AUTHORITY C on B.AUTHORITY_CODE_PK_FK = C.AUTHORITY_CODE
-         WHERE A.MEMBER_ID = #{memberId}
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_ID = #{memberId}
     </select>
 
     <select id="selectMemberByEmail" resultType="MemberDTO">
         SELECT
-               MEMBER_ID
-          FROM TBL_MB_MEMBER
-         WHERE EMAIL = #{email}
+               A.MEMBER_ID
+          FROM TBL_MB_MEMBER A
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.EMAIL = #{email}
     </select>
 
     <insert id="insertPersonalMember" parameterType="PersonalMemberDTO">
@@ -89,6 +121,30 @@
         FROM DUAL
     </insert>
 
+    <insert id="insertCompanyMember" parameterType="CompanyMemberDTO">
+        INSERT ALL
+        INTO TBL_MB_MEMBER
+        (
+            MEMBER_CODE_PK, MEMBER_ID, MEMBER_PW
+        , PW_CHANGED_DATE, PW_EXPIRATION_DATE, MEMBER_NAME
+        , SIGNUP_DATE, EXPIRATION_DATE, WITHDRAWAL_DATE
+        , PHONE, EMAIL, IS_ENT_MEMBER
+        )
+        VALUES
+            (
+                ${memberCodePk}, #{memberId}, #{memberPw}
+            , SYSDATE, SYSDATE + 365, #{memberName}
+            , SYSDATE, SYSDATE, NULL
+            , #{phone}, #{email}, 'Y'
+            )
+        INTO TBL_MB_MEMBER_ROLE (MEMBER_NO_PK_FK, AUTHORITY_CODE_PK_FK)
+        VALUES (SEQ_MB_MEMBER_CODE_PK.currval,3)
+        INTO TBL_MB_ENT_MEBER (REMAINING_POST, REMAINING_INQUIRE, COMPANY_CODE_FK, MEMBER_CODE_FK)
+        VALUES (0, 0, null, SEQ_MB_MEMBER_CODE_PK.currval)
+        SELECT *
+        FROM DUAL
+    </insert>
+
     <update id="updatePersonalMember" parameterType="PersonalMemberDTO">
         UPDATE TBL_MB_MEMBER A
         <set>
@@ -99,11 +155,102 @@
               , A.PHONE = #{phone}
             </if>
         </set>
-       WHERE A.MEMBER_ID = #{memberId}
+       WHERE A.IS_WITHDRAWAL = 'N'
+         AND A.MEMBER_ID = #{memberId}
     </update>
     <update id="updatePassword" parameterType="PersonalMemberDTO">
         UPDATE TBL_MB_MEMBER A
            SET A.MEMBER_PW = #{memberPw}
-         WHERE A.MEMBER_ID = #{memberId}
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_ID = #{memberId}
+    </update>
+    <update id="deleteMember">
+        UPDATE  TBL_MB_MEMBER A
+           SET A.IS_WITHDRAWAL = 'Y'
+             , A.WITHDRAWAL_DATE = SYSDATE
+         WHERE A.IS_WITHDRAWAL = 'N'
+           AND A.MEMBER_CODE_PK = #{memberCodePk}
+    </update>
+
+    <select id="selectEntMemberByMemberCodeFk" resultType="EntMemberDTO">
+        SELECT
+               A.MEMBER_CODE_FK
+             , A.COMPANY_CODE_FK
+             , A.REMAINING_POST
+             , A.REMAINING_INQUIRE
+             , A.IS_ACTIVE
+          FROM TBL_MB_ENT_MEBER A
+         WHERE A.MEMBER_CODE_FK = #{memberCodePk}
+    </select>
+
+
+    <select id="selectSignupList" resultMap="companyMemberDTOResultMap">
+        SELECT
+               A.MEMBER_CODE_PK
+             , A.MEMBER_ID
+             , A.MEMBER_NAME
+             , A.SIGNUP_DATE
+             , A.PHONE
+             , A.EMAIL
+             , B.MEMBER_CODE_FK
+             , B.REMAINING_POST
+             , B.REMAINING_INQUIRE
+             , B.IS_ACTIVE
+             , C.COMPANY_CODE_PK
+             , C.COM_URL
+             , C.COM_NAME
+             , C.REGIST_NUMBER
+             , C.IS_REVEALED
+             , C.IS_APPROVED
+          FROM TBL_MB_MEMBER A
+          JOIN TBL_MB_ENT_MEBER B ON (A.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
+          JOIN TBL_COM_COMPANY C ON (B.COMPANY_CODE_FK = C.COMPANY_CODE_PK)
+           AND A.IS_ENT_MEMBER = 'Y'
+           AND B.IS_ACTIVE = 'N'
+           AND A.IS_WITHDRAWAL = 'N'
+    </select>
+    <select id="selectSignupByMemberCodePk" resultMap="companyMemberDTOResultMap">
+        SELECT
+               A.MEMBER_CODE_PK
+             , A.MEMBER_ID
+             , A.MEMBER_NAME
+             , A.SIGNUP_DATE
+             , A.PHONE
+             , A.EMAIL
+             , B.MEMBER_CODE_FK
+             , B.REMAINING_POST
+             , B.REMAINING_INQUIRE
+             , B.IS_ACTIVE
+             , C.COMPANY_CODE_PK
+             , C.COM_URL
+             , C.COM_NAME
+             , C.REGIST_NUMBER
+             , C.IS_REVEALED
+             , C.IS_APPROVED
+          FROM TBL_MB_MEMBER A
+          JOIN TBL_MB_ENT_MEBER B ON (A.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
+          JOIN TBL_COM_COMPANY C ON (B.COMPANY_CODE_FK = C.COMPANY_CODE_PK)
+           AND A.IS_ENT_MEMBER = 'Y'
+           AND B.IS_ACTIVE = 'N'
+           AND A.IS_WITHDRAWAL = 'N'
+         WHERE A.MEMBER_CODE_PK = #{memberCodePk}
+    </select>
+
+    <update id="putCompanyMember">
+        UPDATE TBL_MB_ENT_MEBER A
+           SET A.COMPANY_CODE_FK = #{companyCodeFk}
+         WHERE A.MEMBER_CODE_FK = #{memberCodeFk}
+
+    </update>
+
+    <select id="getMemberNextSeq" resultType="_int">
+        SELECT SEQ_MB_MEMBER_CODE_PK.nextval
+          FROM DUAL
+    </select>
+
+    <update id="updateEntMemberIsActive" parameterType="_int">
+        UPDATE TBL_MB_ENT_MEBER A
+           SET A.IS_ACTIVE = 'Y'
+         WHERE A.MEMBER_CODE_FK = #{memberCodeFk}
     </update>
 </mapper>

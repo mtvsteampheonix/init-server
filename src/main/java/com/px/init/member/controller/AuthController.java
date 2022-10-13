@@ -3,6 +3,7 @@ package com.px.init.member.controller;
 import com.px.init.common.dto.ResponseDTO;
 import com.px.init.exception.EmailException;
 import com.px.init.exception.SignupException;
+import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.service.AuthServiceImpl;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -54,13 +57,30 @@ public class AuthController {
     @PostMapping("/signup/personal")
     public ResponseEntity<ResponseDTO> signup(@RequestBody PersonalMemberDTO personalFormData, HttpServletRequest httpRequest) {
         HttpSession session = httpRequest.getSession(false);
-        System.out.println("personalFormData = " + personalFormData);
         if (session == null) {
             throw new SignupException("잘못된 접근입니다.");
         } else if (session.getAttribute("isEmailVerify") == null) {
             throw new SignupException("이메일인증");
         }
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "개인 회원 회원가입 성공", authService.signup(personalFormData)));
+    }
+
+    /**
+     * Signup response entity.
+     *
+     * @param companyFormData the company form data
+     * @param httpRequest     the http request
+     * @return the response entity
+     */
+    @PostMapping("/signup/company")
+    public ResponseEntity<ResponseDTO> signup(@RequestBody CompanyMemberDTO companyFormData, HttpServletRequest httpRequest){
+        HttpSession session = httpRequest.getSession(false);
+        if (session == null) {
+            throw new SignupException("잘못된 접근입니다.");
+        } else if (session.getAttribute("isEmailVerify") == null) {
+            throw new SignupException("이메일인증");
+        }
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "기업 회원 회원가입", authService.signup(companyFormData)));
     }
 
     /**
@@ -71,8 +91,8 @@ public class AuthController {
      * @throws LoginException the login exception
      */
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody MemberDTO memberDTO) throws LoginException {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(memberDTO)));
+    public ResponseEntity<ResponseDTO> login(@RequestBody MemberDTO memberDTO, HttpServletResponse response) throws LoginException, IOException {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(memberDTO, response)));
     }
 
 
@@ -121,5 +141,4 @@ public class AuthController {
         System.out.println("inputId = " + inputId);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "중복되지 않는 이메일", authService.checkId(inputId)));
     }
-
 }

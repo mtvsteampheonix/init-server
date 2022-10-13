@@ -61,10 +61,13 @@ public class SecurityConfig {
                 .antMatchers("/members/**").hasAnyRole("PERSONAL", "COMPANY", "ADMIN")
                 //                .antMatchers("/members/**").permitAll()
                 .antMatchers("/matches/**").permitAll()
+                .antMatchers("/admins/**").hasRole("ADMIN")
 //                .antMatchers("/members/**").hasAnyRole("ADMIN")
 
                 .antMatchers("/jobsearchs/**").permitAll()
                 .antMatchers("**").denyAll()
+
+
 
                 .and()
                 .cors()
