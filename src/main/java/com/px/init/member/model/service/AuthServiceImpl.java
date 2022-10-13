@@ -174,12 +174,15 @@ public class AuthServiceImpl implements AuthService {
         MemberDTO member = mapper.selectMemberByMemberId(memberDTO.getMemberId());
         System.out.println("member = " + member);
         if (member == null) {
-            throw new LoginException("없는 아이디입니다.");
+            log.info("[AuthService] Password Match Fail");
+            response.sendError(400, "잘못된 아이디 또는 비밀번호 입니다.");
+            return null;
         }
         // 비밀번호 매칭
         if (!passwordEncoder.matches(memberDTO.getMemberPw(), member.getMemberPw())) {
             log.info("[AuthService] Password Match Fail");
             response.sendError(400, "잘못된 아이디 또는 비밀번호 입니다.");
+            return null;
 //            throw new LoginException("잘못된 아이디 또는 비밀번호 입니다.");
         }
         if (member.getMemberRole().get(0).getAuthority().getAuthorityName().equals("ROLE_COMPANY")) {
@@ -189,9 +192,11 @@ public class AuthServiceImpl implements AuthService {
             if (memberCompanyInfo.getIsActive() == 'N') {
                 log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
                 response.sendError(403, "거절된 회원입니다. 관리자에게 문의하세요");
+                return null;
             } else if (memberCompanyInfo.getIsActive() == 0) {
-                log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
+                log.info("[AuthService] 아직 승인되지 않은 회원입니다. 관리자에게 문의하세요");
                 response.sendError(403, "아직 승인되지 않은 회원입니다. 관리자에게 문의하세요");
+                return null;
             }
         }
 
