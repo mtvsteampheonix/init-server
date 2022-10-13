@@ -25,4 +25,6 @@ public interface MatchMapper {
     List<String> failureEmailList(NoticeFailureDTO noticeFailureDTO);
 
     int updateAccepted(NoticeFailureDTO noticeFailureDTO);
+
+    CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode);
 }

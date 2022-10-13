@@ -54,14 +54,36 @@
         <result property="personalName" column="PERSONAL_NAME"/>
     </resultMap>
 
-    <resultMap id="positionDivDTO" type="com.px.init.match.model.dto.PositionDivDTO">
-        <id property="posDivCode" column="POS_DIV_CODE_PK"/>
-        <result property="rsmValue" column="RSM_VALUE"/>
-    </resultMap>
 
+<!--////////////////////////-->
     <resultMap id="chosePositionDTO" type="com.px.init.match.model.dto.ChosePositionDTO">
         <id property="resumeCode" column="RESUME_CODE_PK_FK"/>
-        <association property="posDivCode" column="POS_DIV_CODE_PK_FK"/>
+        <association property="positionDivDTO" resultMap="positionDivDTO"/>
+    </resultMap>
+
+    <!--////////////////////////-->
+
+    <resultMap id="companyApplyDetailDTO" type="com.px.init.match.model.dto.CompanyApplyListDetailDTO">
+        <result property="companyCode" column="COMPANY_CODE_FK"/>
+        <result property="resumeTitle" column="TITLE"/>
+        <result property="personalName" column="PERSONAL_NAME"/>
+        <collection property="positionDivDTO" resultMap="positionDivDTO"/>
+        <collection property="choseTechDTO" resultMap="choseTechDTO"/>
+        <collection property="selfIntroductionAnsweredDTO" resultMap="selfIntroductionAnsweredDTO"/>
+    </resultMap>
+
+    <resultMap id="positionDivDTO" type="com.px.init.match.model.dto.PositionDivDTO">
+        <result property="posDivCode" column="POS_DIV_CODE_PK"/>
+        <result property="rsmValue" column="RSM_VALUE"/>
+    </resultMap>
+    
+    <resultMap id="selfIntroductionAnsweredDTO" type="com.px.init.match.model.dto.SelfIntroductionAnsweredDTO">
+        <result property="introductionCategory" column="SELF_INTRODUCTION_CATEGORY"/>
+        <result property="answerContent" column="ANSWER_CONTENT"/>
+    </resultMap>
+
+    <resultMap id="choseTechDTO" type="com.px.init.match.model.dto.ChoseTechDTO">
+        <result property="techValue" column="TECH_VALUE"/>
     </resultMap>
 
     <select id="getComName" resultType="string">
@@ -219,5 +241,25 @@
 <!--         <if test="isAccepted!=null and isAccepted = 'N'">-->
 <!--           AND A.IS_ACCEPTED = 'N'-->
 <!--         </if>-->
+    </select>
+
+    <select id="selectCompanyApplyDetail" resultMap="companyApplyDetailDTO">
+        SELECT
+               B.TITLE
+             , B.PERSONAL_NAME
+             , D.RSM_VALUE
+             , F.SELF_INTRODUCTION_CATEGORY
+             , E.ANSWER_CONTENT
+             , H.TECH_VALUE
+             , A.NOTICE_CODE_FK
+          FROM TBL_JS_APPLICATION A
+          JOIN TBL_RSM_RESUME B ON (A.RESUME_CODE_FK = B.RESUME_CODE_PK)
+          JOIN TBL_RSM_CHOSE_POSITION C ON (B.RESUME_CODE_PK = C.RESUME_CODE_PK_FK)
+          JOIN TBL_RSM_POSITION_DIV D ON (C.POS_DIV_CODE_PK_FK = D.POS_DIV_CODE_PK)
+          JOIN TBL_JS_SELF_INTRODUCTION_ANSWERED E ON (A.APPLICATION_CODE_PK = E.APPLICATION_CODE_PK_FK)
+          JOIN TBL_JS_SELF_INTRODUCTION F ON (E.SELF_INTRODUCTION_CODE_PK_FK = F.SELF_INTRODUCTION_CODE_PK)
+          JOIN TBL_RSM_CHOSE_TECH G ON (B.RESUME_CODE_PK = G.RESUME_CODE_PK_FK)
+          JOIN TBL_RSM_TECH_DIV H ON (G.TECH_DIV_CODE_PK_FK = H.TECH_DIV_CODE_PK)
+         WHERE A.APPLICATION_CODE_PK = #{applicationCode}
     </select>
 </mapper>
