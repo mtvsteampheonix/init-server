@@ -6,6 +6,7 @@ import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -47,7 +48,7 @@ public interface AuthService {
      * @return the token dto
      * @throws Exception the exception
      */
-    TokenDTO login(MemberDTO memberDTO) throws Exception;
+    TokenDTO login(MemberDTO memberDTO, HttpServletResponse response) throws Exception;
 
     /**
      * 이메일 인증 번호 전송요청 서비스 메소드

@@ -50,7 +50,6 @@ public class MemberController {
      */
     @GetMapping("/personal")
     public ResponseEntity<ResponseDTO> findPersonalMember() {
-        System.out.println("SecurityContextHolder.getContext().getAuthentication().getAuthorities() = " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 조회 완료", memberService.findMember()));
     }
 
@@ -69,6 +68,11 @@ public class MemberController {
 //        }
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 수정 완료", memberService.updateMember(updatePersonal)));
     }
+
+//    @GetMapping("/company")
+//    public ResponseEntity<ResponseDTO> findCompanMember(){
+//
+//    }
 
     /**
      * Patch member password response entity.

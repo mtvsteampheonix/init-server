@@ -1,5 +1,6 @@
 package com.px.init.member.model.service;
 
+import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 import com.px.init.member.model.dto.request.PasswordRequestDTO;

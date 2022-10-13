@@ -1,9 +1,12 @@
 package com.px.init.member.model.dao;
 
 import com.px.init.member.model.dto.CompanyMemberDTO;
+import com.px.init.member.model.dto.EntMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.member.model.dto.PersonalMemberDTO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <pre>
@@ -74,4 +77,16 @@ public interface MemberMapper {
      * @return the int
      */
     int insertCompanyMember(CompanyMemberDTO companyFormData);
+
+    EntMemberDTO selectEntMemberByMemberCodeFk(int memberCodePk);
+
+    List<CompanyMemberDTO> selectSignupList();
+
+    int putCompanyMember(EntMemberDTO entMember);
+
+    int getMemberNextSeq();
+
+    CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
+
+    int updateEntMemberIsActive(int memberCodeFk);
 }

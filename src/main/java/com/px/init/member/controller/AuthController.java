@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -89,8 +91,8 @@ public class AuthController {
      * @throws LoginException the login exception
      */
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody MemberDTO memberDTO) throws LoginException {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(memberDTO)));
+    public ResponseEntity<ResponseDTO> login(@RequestBody MemberDTO memberDTO, HttpServletResponse response) throws LoginException, IOException {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(memberDTO, response)));
     }
 
 
@@ -139,5 +141,4 @@ public class AuthController {
         System.out.println("inputId = " + inputId);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "중복되지 않는 이메일", authService.checkId(inputId)));
     }
-
 }
