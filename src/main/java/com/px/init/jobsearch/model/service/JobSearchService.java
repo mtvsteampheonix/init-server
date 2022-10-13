@@ -4,11 +4,12 @@ import com.px.init.jobsearch.model.dao.JobSearchMapper;
 import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
 import com.px.init.jobsearch.model.dto.JobSearchListDTO;
 import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Job search service.
@@ -51,18 +52,53 @@ public class JobSearchService {
         return jobSearchMapper.selectJobSearchDetailsByCode(noticecode);
     }
 
+    public List<JobSearchListDTO> selectMyJobSearchList(int memberCodePk) {
+        int companyCodeFk = jobSearchMapper.selectCompanyCodeFkByMemberCodePk(memberCodePk);
+        System.out.println("memberCodePk : "+companyCodeFk);
+
+        List<JobSearchListDTO> jobMySearchListDTOList = jobSearchMapper.selectMyJobSearchList(companyCodeFk);
+
+        return jobMySearchListDTOList;
+    }
+
     @Transactional
-    public String insertJobSearch(RegistJobSearchDTO registJobSearchDTO) {
+    public String insertJobSearch(RegistJobSearchDTO registJobSearchDTO, int memberCodePk) {
         String response = "구직공고 작성 실패";
-
         List<String> selfIntroList = registJobSearchDTO.getSelfIntroList();
-        int result1 = jobSearchMapper.insertJobSearch(registJobSearchDTO);
-        int result2 = jobSearchMapper.insertSelfIntro(selfIntroList);
 
-        if(result1 > 0 && result2>0){
+        int companyCodeFk = jobSearchMapper.selectCompanyCodeFkByMemberCodePk(memberCodePk);
+        System.out.println("memberCodePk : "+companyCodeFk);
+
+        Map<String,Object> insertMap = new HashMap<String,Object>();
+        insertMap.put("registJobSearchDTO",registJobSearchDTO);
+        insertMap.put("companyCodeFk",companyCodeFk);
+
+        int result1 = jobSearchMapper.insertJobSearch(insertMap);
+//        int result1 = jobSearchMapper.insertJobSearch(registJobSearchDTO, companyCodeFk);
+        int noticeCode = registJobSearchDTO.getNoticeCodePk();
+        System.out.println("seq값을 제데로 출력하는지 확인 : " +noticeCode);
+        System.out.println(selfIntroList);
+        int result2 = 0;
+        Map<String,Object> map = new HashMap<String,Object>();
+        /*작업중*/
+        map.put("noticeCode",noticeCode);
+        for(String selfIntro : selfIntroList){
+            map.put("selfIntro", selfIntro);
+            result2 += jobSearchMapper.insertJobSearchSelfIntro(map);
+        }
+//        int result2 = jobSearchMapper.insertJobSearchSelfIntro(selfIntroList);
+
+        if(result1 > 0 && result2 >0){
             response="구직공고 작성 성공";
         }
 
         return response;
     }
+
+
+    public int deleteJobSearch(int noticeCode) {
+        return jobSearchMapper.deleteJobSearch(noticeCode);
+    }
+
+
 }

@@ -17,16 +17,22 @@ import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public  interface JobSearchMapper {
 
     List<JobSearchListDTO> selectJobSearchList(String search);
 
-
     JobSearchDetailsDTO selectJobSearchDetailsByCode(int noticecode);
 
-    int insertJobSearch(RegistJobSearchDTO registJobSearchDTO);
+    int insertJobSearch(Map insertMap);
 
-    int insertSelfIntro(List<String> selfIntroList);
+    int insertJobSearchSelfIntro(Map map);
+
+    int selectCompanyCodeFkByMemberCodePk(int memberCodePk);
+
+    List<JobSearchListDTO> selectMyJobSearchList(int companyCodeFk);
+
+    int deleteJobSearch(int noticeCode);
 }

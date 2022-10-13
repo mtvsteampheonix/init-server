@@ -15,10 +15,12 @@ import com.px.init.common.dto.ResponseDTO;
 import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
 import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
 import com.px.init.jobsearch.model.service.JobSearchService;
+import com.px.init.member.model.dto.MemberDTO;
 import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,32 +52,23 @@ public class JobSearchController {
      */
     @GetMapping("")
     public ResponseEntity<ResponseDTO> selectJobSearchList(@RequestParam(name = "search", defaultValue = "") String search) {
+
         System.out.println("요청이 들어오고 있긴합니다.");
       return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회성공", jobSearchService.selectJobSearchList(search)));
-      
-//        int memberRole = 0;
-//        System.out.println(SecurityContextHolder.getContext());
-//        MemberDTO loginedMember = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String  memberName = loginedMember.getMemberName();
-//        System.out.println(loginedMember.getAuthorities());
-//        return null;
-//        return ResponseEntity.ok().body(new JobSearchListDTO(HttpStatus.OK, "조회 성공", jobSearchService.selectJobSearchList(memberRole)));
-
-//        System.out.println("selectJobSearchs메소드 호출");
-//        System.out.println(SecurityContextHolder.getContext());
-//        MemberDTO memberDTO = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String  memberName = memberDTO.getMemberName();
-//        System.out.println(memberDTO);
-
-//        switch (memberName){
-//            case "어드민":
-//                break;
-//            case "":
-//            default:
-//                break;
-//        }
 
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<ResponseDTO> selectMyJobSearchList() {
+        System.out.println(SecurityContextHolder.getContext());
+        MemberDTO loginedMember = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int  memberCodePk = loginedMember.getMemberCodePk();
+
+        System.out.println("my요청이 들어오고 있긴합니다.");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회성공", jobSearchService.selectMyJobSearchList(memberCodePk)));
+
+    }
+
 
     @GetMapping("/{noticecode}")
     public ResponseEntity<ResponseDTO> selectJobSearchDetailsByCode(@PathVariable int noticecode){
@@ -88,8 +81,16 @@ public class JobSearchController {
     @PostMapping("")
     public ResponseEntity<ResponseDTO> insertJobSearch(@RequestBody RegistJobSearchDTO registJobSearchDTO){
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고생성",  jobSearchService.insertJobSearch(registJobSearchDTO)));
+        System.out.println(SecurityContextHolder.getContext());
+        MemberDTO loginedMember = (MemberDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int  memberCodePk = loginedMember.getMemberCodePk();
+        System.out.println("memberId: "+memberCodePk);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고생성",  jobSearchService.insertJobSearch(registJobSearchDTO,memberCodePk)));
     }
 
 
+    @DeleteMapping("/{noticeCode}")//게시
+    public ResponseEntity<ResponseDTO> deleteJobSearch(@PathVariable int noticeCode){
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고삭제성공", jobSearchService.deleteJobSearch(noticeCode)));
+    }
 }

@@ -29,11 +29,12 @@ public class RegistJobSearchDTO {
     private java.util.Date recruitEndDate; //모집종료일
     private int companyCodeFk; //기업코드 이거 어떻게 넣어줘야해 따로??
     private List<String> selfIntroList; //자기소개서 등록할 dto
+    private int employees;
+    private String benefits;
 
     public RegistJobSearchDTO() {
     }
-
-    public RegistJobSearchDTO(int noticeCodePk, String title, String content, String education, String career, String preference, int annualIncome, String entLocation, Date recruitStartDate, Date recruitEndDate, int companyCodeFk, List<String> selfIntroList) {
+    public RegistJobSearchDTO(int noticeCodePk, String title, String content, String education, String career, String preference, int annualIncome, String entLocation, Date recruitStartDate, Date recruitEndDate, int companyCodeFk, List<String> selfIntroList, int employees, String benefits) {
         this.noticeCodePk = noticeCodePk;
         this.title = title;
         this.content = content;
@@ -46,6 +47,8 @@ public class RegistJobSearchDTO {
         this.recruitEndDate = recruitEndDate;
         this.companyCodeFk = companyCodeFk;
         this.selfIntroList = selfIntroList;
+        this.employees = employees;
+        this.benefits = benefits;
     }
 
     public int getNoticeCodePk() {
@@ -144,6 +147,22 @@ public class RegistJobSearchDTO {
         this.selfIntroList = selfIntroList;
     }
 
+    public int getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(int employees) {
+        this.employees = employees;
+    }
+
+    public String getBenefits() {
+        return benefits;
+    }
+
+    public void setBenefits(String benefits) {
+        this.benefits = benefits;
+    }
+
     @Override
     public String toString() {
         return "RegistJobSearchDTO{" +
@@ -159,6 +178,8 @@ public class RegistJobSearchDTO {
                 ", recruitEndDate=" + recruitEndDate +
                 ", companyCodeFk=" + companyCodeFk +
                 ", selfIntroList=" + selfIntroList +
+                ", employees=" + employees +
+                ", benefits='" + benefits + '\'' +
                 '}';
     }
 }

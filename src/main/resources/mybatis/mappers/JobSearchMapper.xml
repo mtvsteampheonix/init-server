@@ -95,6 +95,34 @@
     ORDER BY POST_START_DATE
 </select>
 
+    <select id="selectMyJobSearchList" resultType="JobSearchListDTO">
+        SELECT
+            A.TITLE,
+            A.CONTENT,
+            A.EDUCATION,
+            A.CAREER,
+            A.PREFERENCE,
+            A.SKILL_SORTATION_CODE,
+            A.JOB_SORTATION_CODE,
+            A.ANNUAL_INCOME,
+            A.ENT_LOCATION,
+            A.RECRUIT_START_DATE,
+            A.RECRUIT_END_DATE,
+            A.APPLICANT,
+            A.IS_CLOSE,
+            A.POST_START_DATE,
+            A.POST_END_DATE,
+            A.POSTING_TIME,
+            A.COMPANY_CODE_FK,
+            A.NOTICE_CODE_PK,
+            B.COM_NAME
+        FROM TBL_JS_NOTICE A
+                 JOIN TBL_COM_COMPANY B
+                      ON A.COMPANY_CODE_FK = B.COMPANY_CODE_PK
+        WHERE A.COMPANY_CODE_FK = #{companyCodeFk}
+        ORDER BY POST_START_DATE
+    </select>
+
     <select id="selectJobSearchDetailsByCode" resultType="JobSearchDetailsDTO">
         SELECT
                 B.COM_NAME,
@@ -185,37 +213,122 @@
 <!--    private java.util.Date postEndDate; //게시종료일-->
 <!--    private int postingTime;//게시시간-->
 <!--    private int companyCodeFk;//기업코드 -->
-    <insert id="insertJobSearch" parameterType="RegistJobSearchDTO">
+
+<!--    <insert id="insertJobSearch" parameterType="RegistJobSearchDTO">-->
+<!--        INSERT ALL-->
+<!--        INSERT INTO TBL_JS_NOTICE-->
+<!--        (-->
+<!--         NOTICE_CODE_PK,-->
+<!--          TITLE,-->
+<!--          CONTENT,-->
+<!--         EDUCATION,-->
+<!--         CAREER,-->
+<!--         PREFERENCE,-->
+<!--         ANNUAL_INCOME,-->
+<!--         ENT_LOCATION,-->
+<!--         RECRUIT,START_DATE,-->
+<!--         RECRUIT_END_DATE,-->
+<!--         COMPANY_CODE_FK-->
+<!--        )VALUES-->
+<!--        (-->
+<!--         SEQ_JS_NOTICE_CODE_PK.NEXTVAL,-->
+<!--         #{title},-->
+<!--         #{content},-->
+<!--         #{education},-->
+<!--         #{career},-->
+<!--         #{preference},-->
+<!--         #{annualIncome},-->
+<!--         #{entLocation},-->
+<!--         #{recruitStartDate},-->
+<!--         #{recruitEndDate},-->
+<!--         #{companyCodeFk}-->
+<!--        )-->
+<!--        INSERT INTO TBL_JS_SELF_INTRODUCTION-->
+<!--        <foreach collection="selfIntroList" item="item" open="INSERT ALL" close="" >-->
+<!--        (-->
+<!--        SELF_INTRODUCTION_CODE_PK,-->
+<!--        NOTICE_CODE_FK,-->
+<!--        SELF_INTRODUCTION_CATEGORY-->
+<!--        )-->
+<!--        VALUES-->
+<!--        (-->
+<!--        SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL,-->
+<!--        SEQ_JS_NOTICE_CODE_PK.CURRVAL,-->
+<!--        #{item}-->
+<!--        )-->
+<!--        </foreach>-->
+<!--        </insert>-->
+
+    <insert id="insertJobSearch" parameterType="map">
+        <selectKey keyProperty="registJobSearchDTO.noticeCodePk" resultType="int" order="BEFORE">
+            SELECT SEQ_JS_NOTICE_CODE_PK.NEXTVAl FROM DUAL
+        </selectKey>
         INSERT INTO TBL_JS_NOTICE
-        ( NOTICE_CODE_PK,
-          TITLE,
-          CONTENT,
-         EDUCATION,
-         CAREER,
-         PREFERENCE,
-         ANNUAL_INCOME,
-         ENT_LOCATION,
-         RECRUIT,START_DATE,
-         RECRUIT_END_DATE,
-         IS_CLOSE,
-         COMPANY_CODE_FK
+        (
+        NOTICE_CODE_PK,
+        TITLE,
+        CONTENT,
+        EDUCATION,
+        CAREER,
+        PREFERENCE,
+        ANNUAL_INCOME,
+        ENT_LOCATION,
+        RECRUIT_START_DATE,
+        RECRUIT_END_DATE,
+        COMPANY_CODE_FK,
+        NOTICE_BENEFIT,
+        SKILL_SORTATION_CODE,
+        JOB_SORTATION_CODE
         )VALUES
         (
-         SEQ_JS_NOTICE_CODE_PK.NEXTVAL,
-         #{title},
-         #{content},
-         #{education},
-         #{career},
-         #{preference},
-         #{annualIncome},
-         #{entLocation},
-         #{recruitStartDate},
-         #{recruitEndDate},
-         #{companyCodeFk}
+        #{registJobSearchDTO.noticeCodePk},
+        #{registJobSearchDTO.title},
+        #{registJobSearchDTO.content},
+        #{registJobSearchDTO.education},
+        #{registJobSearchDTO.career},
+        #{registJobSearchDTO.preference},
+        #{registJobSearchDTO.annualIncome},
+        #{registJobSearchDTO.entLocation},
+        #{registJobSearchDTO.recruitStartDate},
+        #{registJobSearchDTO.recruitEndDate},
+        #{companyCodeFk},
+        #{registJobSearchDTO.benefits},
+         999,
+         999
+
         )
+    </insert >
+    <insert id="insertJobSearchSelfIntro" parameterType="map">
+<!--        <selectKey resultType="_int" keyProperty="SIBAL_CODE" order="BEFORE">-->
+<!--            SELECT-->
+<!--            SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL-->
+<!--                FROM DUAL-->
+<!--        </selectKey>-->
+        insert INTO TBL_JS_SELF_INTRODUCTION
+            (
+            SELF_INTRODUCTION_CODE_PK,
+            NOTICE_CODE_FK,
+            SELF_INTRODUCTION_CATEGORY
+            )
+            VALUES
+            (
+            SEQ_JS_SELF_INTRODUCTION_CODE_PK.NEXTVAL,
+            #{noticeCode},
+            #{selfIntro}
+            )
     </insert>
 
+    <select id="selectCompanyCodeFkByMemberCodePk" resultType="int">
+        SELECT
+            C.COMPANY_CODE_PK
+            FROM TBL_MB_MEMBER A
+            JOIN TBL_MB_ENT_MEBER B ON A.MEMBER_CODE_PK = B.MEMBER_CODE_FK
+            JOIN TBL_COM_COMPANY C ON B.COMPANY_CODE_FK = C.COMPANY_CODE_PK
+            WHERE A.MEMBER_CODE_PK = #{memberCodePk}
+    </select>
 
-<!--    <insert id="insertSelfIntro" parameterType="L"></insert>-->
-
+    <delete id="deleteJobSearch" parameterType="int">
+        DELETE FROM TBL_JS_NOTICE
+        WHERE NOTICE_CODE_PK = #{noticeCode}
+    </delete>
 </mapper>
