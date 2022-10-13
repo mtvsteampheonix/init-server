@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Transactional
     @Override
-    public PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws DuplicateMemberEmailException {
+    public DefaultMemberDTO signup(DefaultMemberDTO personalFormData) throws DuplicateMemberEmailException {
         log.info("[AuthService] signup(PersonalMemberDTO) START ===================================");
         log.info("[AuthService] personalFormData {}", personalFormData);
         if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {

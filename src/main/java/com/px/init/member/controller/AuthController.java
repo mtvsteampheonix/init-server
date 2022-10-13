@@ -5,9 +5,8 @@ import com.px.init.exception.EmailException;
 import com.px.init.exception.SignupException;
 import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import com.px.init.member.model.service.AuthServiceImpl;
-import com.px.init.member.model.service.MemberService;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +55,7 @@ public class AuthController {
      * @return the response entity
      */
     @PostMapping("/signup/personal")
-    public ResponseEntity<ResponseDTO> signup(@RequestBody PersonalMemberDTO personalFormData, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> signup(@RequestBody DefaultMemberDTO personalFormData, HttpServletRequest httpRequest) {
         HttpSession session = httpRequest.getSession(false);
         if (session == null) {
             throw new SignupException("잘못된 접근입니다.");

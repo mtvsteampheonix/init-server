@@ -49,7 +49,7 @@ public class MemberController {
      * @return the response entity
      */
     @GetMapping({"", "/"})
-    public ResponseEntity<ResponseDTO> findPersonalMember() {
+    public ResponseEntity<ResponseDTO> findMember() {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 조회 완료", memberService.findMember()));
     }
 
