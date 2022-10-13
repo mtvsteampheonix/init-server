@@ -2,7 +2,7 @@ package com.px.init.member.model.service;
 
 import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import com.px.init.member.model.dto.TokenDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public interface AuthService {
      * @return the member dto
      * @throws Exception the exception
      */
-    PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws Exception;
+    DefaultMemberDTO signup(DefaultMemberDTO personalFormData) throws Exception;
 
     /**
      * Signup company member dto.
@@ -45,6 +45,7 @@ public interface AuthService {
      * 로그인 서비스
      *
      * @param memberDTO the member dto
+     * @param response  the response
      * @return the token dto
      * @throws Exception the exception
      */
@@ -77,4 +78,11 @@ public interface AuthService {
      */
     boolean checkId(String inputId) throws Exception;
 
+    /**
+     * Reset password boolean.
+     *
+     * @param member the member
+     * @return the boolean
+     */
+    boolean resetPassword(MemberDTO member);
 }

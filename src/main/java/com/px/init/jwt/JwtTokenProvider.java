@@ -33,6 +33,7 @@ public class JwtTokenProvider{
     private static final String MEMBER_CODE = "memberCode";
     private static final String MEMBER_NAME = "memberName";
     private static final String BEARER_TYPE = "Bearer";
+    private static final String PW_IS_TEMP = "pwIsTemp";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 10분 // 잠시 60분으로
 
     private final UserDetailsService userDetailsService;
@@ -72,6 +73,7 @@ public class JwtTokenProvider{
         claims.put(AUTHORITIES_KEY, roles.get(0));
         claims.put(MEMBER_CODE, member.getMemberCodePk());
         claims.put(MEMBER_NAME, member.getMemberName());
+        claims.put(PW_IS_TEMP, member.getPwIsTemp());
 
         long now = (new Date()).getTime();
         //Access Token 생성

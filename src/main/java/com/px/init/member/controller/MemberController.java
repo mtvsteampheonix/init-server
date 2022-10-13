@@ -48,8 +48,8 @@ public class MemberController {
      *
      * @return the response entity
      */
-    @GetMapping("/personal")
-    public ResponseEntity<ResponseDTO> findPersonalMember() {
+    @GetMapping({"", "/"})
+    public ResponseEntity<ResponseDTO> findMember() {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원정보 조회 완료", memberService.findMember()));
     }
 
@@ -59,7 +59,7 @@ public class MemberController {
      * @param updatePersonal the update personal
      * @return the response entity
      */
-    @PutMapping("/personal")
+    @PutMapping({"", "/"})
     public ResponseEntity<ResponseDTO> updateMember(@RequestBody UpdatePersonalRequestDTO updatePersonal) {
 //        Cookie[] cookie = request.getCookies();
 //        for (int i = 0; i < cookie.length; i++) {

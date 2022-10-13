@@ -7,9 +7,11 @@ import com.px.init.email.model.dto.EmailDTO;
 import com.px.init.exception.DuplicateMemberEmailException;
 import com.px.init.exception.EmailException;
 import com.px.init.exception.SignupException;
+import com.px.init.exception.updateException;
 import com.px.init.jwt.JwtTokenProvider;
 import com.px.init.member.model.dao.MemberMapper;
 import com.px.init.member.model.dto.*;
+import com.px.init.util.SecureUtils;
 import org.apache.ibatis.javassist.bytecode.DuplicateMemberException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,22 +51,26 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider tokenProvider;
     private final EmailController emailController;
 
+    private final SecureUtils secureUtils;
+
     /**
      * DI 주입을 위한 생성자
      *
      * @param mapper          the mapper
-     * @param companyMapper
+     * @param companyMapper   the company mapper
      * @param passwordEncoder the password encoder
      * @param tokenProvider   the token provider
      * @param emailController the email controller
+     * @param secureUtils     the secure utils
      */
     @Autowired
-    public AuthServiceImpl(MemberMapper mapper, CompanyMapper companyMapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, EmailController emailController) {
+    public AuthServiceImpl(MemberMapper mapper, CompanyMapper companyMapper, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, EmailController emailController, SecureUtils secureUtils) {
         this.mapper = mapper;
         this.companyMapper = companyMapper;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.emailController = emailController;
+        this.secureUtils = secureUtils;
     }
 
     /**
@@ -76,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Transactional
     @Override
-    public PersonalMemberDTO signup(PersonalMemberDTO personalFormData) throws DuplicateMemberEmailException {
+    public DefaultMemberDTO signup(DefaultMemberDTO personalFormData) throws DuplicateMemberEmailException {
         log.info("[AuthService] signup(PersonalMemberDTO) START ===================================");
         log.info("[AuthService] personalFormData {}", personalFormData);
         if (mapper.selectMemberByEmail(personalFormData.getEmail()) != null) {
@@ -251,6 +257,44 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateMemberException("이미 가입된 아이디 입니다!");
         }
         log.info("[AuthService] checkId End ===================================");
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean resetPassword(MemberDTO member) {
+        log.info("[AuthService] resetPassword START ===========================");
+        MemberDTO foundMember = mapper.selectMemberByEmail(member.getEmail());
+        if (foundMember == null) {
+            log.info("[AuthService] 이메일이 존재하지 않습니다.");
+            throw new DuplicateMemberEmailException("이메일이 존재하지 않습니다.");
+        }
+        if (!foundMember.getMemberName().equals(member.getMemberName())) {
+            log.info("[AuthService] 이름이 일치하지 않습니다.");
+            throw new DuplicateMemberEmailException("이름이 일치하지 않습니다.");
+        }
+        if (!foundMember.getMemberId().equals(member.getMemberId())) {
+            log.info("[AuthService] 아이디가 일치하지 않습니다.");
+            throw new DuplicateMemberEmailException("아이디가 일치하지 않습니다.");
+        }
+        String tempPassword = secureUtils.getRamdomPassword(10);
+        foundMember.setMemberPw(passwordEncoder.encode(tempPassword));
+        log.info("[AuthService] foundMember {}", foundMember);
+        int result = mapper.setMemberPwTemp(foundMember);
+        if(result <= 0 ) {
+            log.info("[AuthService] setMeberPwTemp 매퍼 오류");
+            throw new updateException("임시비밀번호 발급 실패");
+        }
+
+        log.info("[AuthService] 임시비밀번호 이메일 전송 시작");
+        String title = "INIT 서비스 임시비밀번호 발급 안내입니다.";
+        String content = "<div align='center'>" +
+                "<h1>임시 비밀번호 발급 안내입니다.</h1>" +
+                "<h3>임시 비밀번호로 로그인해주세요</h3>" +
+                "<div><p><bold>CODE :<bold><span>" + tempPassword + "</span> </p></div>";
+        emailController.sendEmail(new EmailDTO(foundMember.getEmail(), title, content));
+        log.info("[AuthService] 임시비밀번호 이메일 전송 완료");
+        log.info("[AuthService] resetPassword END ===========================");
         return true;
     }
 

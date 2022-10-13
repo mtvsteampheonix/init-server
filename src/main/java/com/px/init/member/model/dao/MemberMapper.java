@@ -3,7 +3,7 @@ package com.px.init.member.model.dao;
 import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.EntMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
-import com.px.init.member.model.dto.PersonalMemberDTO;
+import com.px.init.member.model.dto.DefaultMemberDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface MemberMapper {
      * @param personalFormData the personal form data
      * @return the int
      */
-    int insertPersonalMember(PersonalMemberDTO personalFormData);
+    int insertPersonalMember(DefaultMemberDTO personalFormData);
 
     /**
      * Select member by member id member dto.
@@ -52,7 +52,7 @@ public interface MemberMapper {
      * @param updateMember the update member
      * @return the int
      */
-    int updatePersonalMember(PersonalMemberDTO updateMember);
+    int updatePersonalMember(DefaultMemberDTO updateMember);
 
     /**
      * Update password int.
@@ -60,7 +60,7 @@ public interface MemberMapper {
      * @param patchMember the patch member
      * @return the int
      */
-    int updatePassword(PersonalMemberDTO patchMember);
+    int updatePassword(DefaultMemberDTO patchMember);
 
     /**
      * Delete member int.
@@ -89,4 +89,6 @@ public interface MemberMapper {
     CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
 
     int updateEntMemberIsActive(int memberCodeFk);
+
+    int setMemberPwTemp(MemberDTO member);
 }
