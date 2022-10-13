@@ -287,6 +287,7 @@
              , D.RSM_VALUE
              , F.SELF_INTRODUCTION_CATEGORY
              , E.ANSWER_CONTENT
+
              , H.TECH_VALUE
              , A.NOTICE_CODE_FK
           FROM TBL_JS_APPLICATION A

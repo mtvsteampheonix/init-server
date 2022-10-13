@@ -23,3 +23,11 @@ mybatis:
 logging:
   level:
     root: info
+
+image:
+  # WebConfig
+  add-resource-locations: classpath:/static/imgs/
+  add-resource-handler: /imgs/**
+  # ProductService
+  image-dir: src/main/resources/static/imgs
+  image-url: http://localhost:8080/imgs/

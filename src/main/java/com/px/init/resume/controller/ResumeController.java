@@ -40,9 +40,11 @@ public class ResumeController {
      * @throws Exception the exception
      */
     @PostMapping("")
-    public ResponseEntity<ResponseDTO> registResume(@RequestBody TotalResumeDTO resume) throws Exception {
+    public ResponseEntity<ResponseDTO> registResume(@AuthenticationPrincipal MemberDTO member ,@RequestBody TotalResumeDTO resume) throws Exception {
 
         System.out.println(resume);
+        int memberCode = member.getMemberCodePk();
+        resume.setMemberCode(memberCode);
 
         int result = resumeService.registResume(resume);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "데이터 저장 성공", resume));
@@ -113,6 +115,28 @@ public class ResumeController {
         int result = resumeService.deleteResume(resumeCode);
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "이력서 삭제 성공", result));
+    }
+
+    @PutMapping("/{resumeCode}")
+    public ResponseEntity<ResponseDTO> updateResume( @AuthenticationPrincipal MemberDTO member, @PathVariable ("resumeCode") int resumeCode, @RequestBody TotalResumeDTO resume) throws Exception {
+
+        System.out.println(resume);
+        int memberCode = member.getMemberCodePk();
+        resume.setMemberCode(memberCode);
+
+        int result = resumeService.updateResume(resume, resumeCode);
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "데이터 업데이트 성공", result));
+
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<ResponseDTO> selectResumeList(){
+
+
+        List<MemberDTO> memberList = resumeService.selectResumeList();
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "관리자용 이력서 목록 조회 성공", memberList));
     }
 
 }

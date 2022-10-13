@@ -1,5 +1,6 @@
 package com.px.init.resume.model.dao;
 
+import com.px.init.member.model.dto.MemberDTO;
 import com.px.init.resume.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -40,4 +41,26 @@ public interface ResumeMapper {
     TotalResumeDTO findResumeDetail(int resumeCode);
 
     int deleteResume(int resumeCode);
+
+    int updateMainResume(ResumeDTO mainInfo);
+
+    int updateSkillResume(SkillStackDTO skillCode);
+
+    int updateDesiredJobResume(DesiredJobDTO desiredJobCode);
+
+    int updateSchoolResume(SchoolDTO schoolInfo);
+
+    int updateCareerResume(CareerDTO careerInfo);
+
+    int updateCoreActivityResume(CoreActivityDTO coreActivityInfo);
+
+    int updateExternalResume(ExternalDTO externalInfo);
+
+    int updateForeignLanguageResume(ForeignLanguageDTO foreignLanguageInfo);
+
+    int updateTrainingResume(TrainingDTO trainingInfo);
+
+    int updateQualificationResume(QualificationDTO qualificationInfo);
+
+    List<MemberDTO> selectResumeList();
 }

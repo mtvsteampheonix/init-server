@@ -299,6 +299,29 @@
         ORDER BY TITLE
     </select>
 
+    <resultMap id="adminSelectResultMap" type="com.px.init.resume.model.dto.ResumeDTO">
+        <id property="resumeCode" column="RESUME_CODE_PK"/>
+        <result property="title" column="TITLE"/>
+        <result property="memberCode" column="MEMBER_CODE_FK"/>
+        <result property="name" column="PERSONAL_NAME"/>
+        <result property="gender" column="GENDER"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="email" column="EMAIL"/>
+    </resultMap>
+    <select id="selectResumeList" resultMap="adminSelectResultMap">
+        SELECT
+               RESUME_CODE_PK
+             , TITLE
+             , MEMBER_CODE_FK
+             , PERSONAL_NAME
+             , GENDER
+             , ADDRESS
+             , EMAIL
+          FROM TBL_RSM_RESUME
+         WHERE IS_ACTIVATED = 'Y'
+         ORDER BY TITLE
+    </select>
+
     <insert id="registMainResume" parameterType="ResumeDTO">
         INSERT INTO TBL_RSM_RESUME
         (
@@ -317,6 +340,24 @@
           , #{email}
         )
     </insert>
+
+    <update id="updateMainResume" parameterType="ResumeDTO">
+        UPDATE
+               TBL_RSM_RESUME
+           SET
+               PERSONAL_NAME = #{name}
+             , GENDER = #{gender}
+             , BIRTH_DATE = #{birthday}
+             , ADDRESS = #{address}
+             , HOUSE_PHONE = #{housePhone}
+             , MOBILE_PHONE = #{mobilePhone}
+             , PICTURE_IS_OPENED = #{isOpenedPicture}
+             , IMG_CODE_FK = #{imageCode}
+             , TITLE = #{title}
+             , ZIPCODE = #{zipCode}
+             , EMAIL = #{email}
+         WHERE RESUME_CODE_PK = #{resumeCode}
+    </update>
 
     <insert id="registSchoolResume" parameterType="SchoolDTO">
         INSERT INTO TBL_RSM_EDUCATION
