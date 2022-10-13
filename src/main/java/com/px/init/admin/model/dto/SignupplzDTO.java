@@ -1,6 +1,4 @@
-package com.px.init.admin.mdoel.dto;
-
-import com.px.init.member.model.dto.EntMemberDTO;
+package com.px.init.admin.model.dto;
 
 /**
  * <pre>

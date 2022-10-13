@@ -1,5 +1,6 @@
-package com.px.init.admin.mdoel.service;
+package com.px.init.admin.model.service;
 
+import com.px.init.admin.model.dto.IsActiveDTO;
 import com.px.init.email.controller.EmailController;
 import com.px.init.exception.updateException;
 import com.px.init.member.model.dao.MemberMapper;
@@ -55,10 +56,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean putCompanyMemberIsActive(int memberCodeFk) {
+    public boolean putCompanyMemberIsActive(IsActiveDTO isActive) {
         log.info("[AdminService] putCompanyMemberIsActive START =====================");
-        log.info("[AdminService] memberCodePk {}", memberCodeFk);
-        int result = memberMapper.updateEntMemberIsActive(memberCodeFk);
+        log.info("[AdminService] memberCodePk {}", isActive.getMemberCodePk());
+        log.info("[AdminService] isActive {}", isActive.getIsActive());
+        int result = memberMapper.updateEntMemberIsActive(isActive);
         log.info("[AdminService] result {}", result);
         if (result < 0) {
             log.info("[AdminService] 기업 회원 승인여부 수정 실패");

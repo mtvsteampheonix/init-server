@@ -143,6 +143,7 @@ public class AuthServiceImpl implements AuthService {
             entMember.setMemberCodeFk(seqNo);
             entMember.setCompanyCodeFk(insertCompany.getCompanyCodePk());
         } else {
+            log.info("[AuthService] 이미 기업정보가 있습니다.");
             log.info("[AuthService] 기업코드 관계 형성");
             entMember.setMemberCodeFk(seqNo);
             entMember.setCompanyCodeFk(foundCompany.getCompanyCodePk());
@@ -186,9 +187,11 @@ public class AuthServiceImpl implements AuthService {
             EntMemberDTO memberCompanyInfo = mapper.selectEntMemberByMemberCodeFk(member.getMemberCodePk());
             log.info("[AuthService] memberCompanyInfo {}", memberCompanyInfo);
             if (memberCompanyInfo.getIsActive() == 'N') {
-                log.info("[AuthService] 승인받지 않은 회원입니다. ");
-//                throw new NotAcceptMemberException("승인을 받지 않은 회원입니다.");
-                response.sendError(403, "승인받지 않은 회원입니다.");
+                log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
+                response.sendError(403, "거절된 회원입니다. 관리자에게 문의하세요");
+            } else if (memberCompanyInfo.getIsActive() == 0) {
+                log.info("[AuthService] 거절된 회원입니다. 관리자에게 문의하세요");
+                response.sendError(403, "아직 승인되지 않은 회원입니다. 관리자에게 문의하세요");
             }
         }
 
