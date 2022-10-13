@@ -90,4 +90,31 @@ public class MatchServiceImpl implements MatchService {
     public CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode) {
         return mapper.selectCompanyApplyDetail(applicationCode);
     }
+
+    @Override
+    public CompanyInformationDTO selectCompanyInformation(int noticeCode) {
+        return mapper.selectCompanyInformation(noticeCode);
+    }
+
+
+    @Override
+    @Transactional
+    public String insertCompanyInterviewSuggestion(InterviewSuggestionDTO interviewSuggestionDTO) throws Exception {
+        int companyCode = mapper.getCompanyCode(interviewSuggestionDTO.getApplicationCode());
+        interviewSuggestionDTO.setCompanyCode(companyCode);
+        System.out.println(interviewSuggestionDTO);
+        int result = mapper.insertCompanyInterviewSuggestion(interviewSuggestionDTO);
+        System.out.println("result = " + result);
+        String message = "";
+        if(result>0){
+            message="success";
+            mapper.successAccepted(interviewSuggestionDTO.getApplicationCode());
+        }else{
+            message="failed";
+            throw new Exception("삐용삐용");
+        }
+        return message;
+    }
+
+
 }

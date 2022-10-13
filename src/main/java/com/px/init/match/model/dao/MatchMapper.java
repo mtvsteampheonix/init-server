@@ -27,4 +27,11 @@ public interface MatchMapper {
     int updateAccepted(NoticeFailureDTO noticeFailureDTO);
 
     CompanyApplyListDetailDTO selectCompanyApplyDetail(int applicationCode);
+
+    CompanyInformationDTO selectCompanyInformation(int noticeCode);
+
+    int insertCompanyInterviewSuggestion(InterviewSuggestionDTO interviewSuggestionDTO);
+
+    int getCompanyCode(int applicationCode);
+    int successAccepted(int applicationCode);
 }
