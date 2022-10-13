@@ -1,7 +1,7 @@
-package com.px.init.admin.mdoel.service;
+package com.px.init.admin.model.service;
 
+import com.px.init.admin.model.dto.IsActiveDTO;
 import com.px.init.member.model.dto.CompanyMemberDTO;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -23,5 +23,5 @@ public interface AdminService {
 
     CompanyMemberDTO findSignupPlzListByMemberCodePk(int memberCodePk);
 
-    boolean putCompanyMemberIsActive(int memberCodeFk);
+    boolean putCompanyMemberIsActive(IsActiveDTO IsActiveDTO);
 }

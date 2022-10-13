@@ -210,7 +210,7 @@
           JOIN TBL_MB_ENT_MEBER B ON (A.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
           JOIN TBL_COM_COMPANY C ON (B.COMPANY_CODE_FK = C.COMPANY_CODE_PK)
            AND A.IS_ENT_MEMBER = 'Y'
-           AND B.IS_ACTIVE = 'N'
+           AND B.IS_ACTIVE IS NULL
            AND A.IS_WITHDRAWAL = 'N'
     </select>
     <select id="selectSignupByMemberCodePk" resultMap="companyMemberDTOResultMap">
@@ -235,7 +235,7 @@
           JOIN TBL_MB_ENT_MEBER B ON (A.MEMBER_CODE_PK = B.MEMBER_CODE_FK)
           JOIN TBL_COM_COMPANY C ON (B.COMPANY_CODE_FK = C.COMPANY_CODE_PK)
            AND A.IS_ENT_MEMBER = 'Y'
-           AND B.IS_ACTIVE = 'N'
+           AND B.IS_ACTIVE IS NULL
            AND A.IS_WITHDRAWAL = 'N'
          WHERE A.MEMBER_CODE_PK = #{memberCodePk}
     </select>
@@ -252,10 +252,10 @@
           FROM DUAL
     </select>
 
-    <update id="updateEntMemberIsActive" parameterType="_int">
+    <update id="updateEntMemberIsActive" parameterType="com.px.init.admin.model.dto.IsActiveDTO">
         UPDATE TBL_MB_ENT_MEBER A
-           SET A.IS_ACTIVE = 'Y'
-         WHERE A.MEMBER_CODE_FK = #{memberCodeFk}
+           SET A.IS_ACTIVE = #{isActive}
+         WHERE A.MEMBER_CODE_FK = #{memberCodePk}
     </update>
 
     <update id="setMemberPwTemp" parameterType="MemberDTO">

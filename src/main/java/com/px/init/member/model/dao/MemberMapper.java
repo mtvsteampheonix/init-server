@@ -1,5 +1,6 @@
 package com.px.init.member.model.dao;
 
+import com.px.init.admin.model.dto.IsActiveDTO;
 import com.px.init.member.model.dto.CompanyMemberDTO;
 import com.px.init.member.model.dto.EntMemberDTO;
 import com.px.init.member.model.dto.MemberDTO;
@@ -88,7 +89,7 @@ public interface MemberMapper {
 
     CompanyMemberDTO selectSignupByMemberCodePk(int memberCodePk);
 
-    int updateEntMemberIsActive(int memberCodeFk);
+    int updateEntMemberIsActive(IsActiveDTO memberCodeFk);
 
     int setMemberPwTemp(MemberDTO member);
 }
