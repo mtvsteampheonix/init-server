@@ -1,12 +1,12 @@
 package com.px.init.jobsearch.model.service;
 
+import com.px.init.common.dto.ResponseDTO;
 import com.px.init.jobsearch.model.dao.JobSearchMapper;
-import com.px.init.jobsearch.model.dto.EditJobSearchDTO;
-import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
-import com.px.init.jobsearch.model.dto.JobSearchListDTO;
-import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
+import com.px.init.jobsearch.model.dto.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.HashMap;
 import java.util.List;
@@ -110,8 +110,21 @@ public class JobSearchService {
     }
 
 
+    /*왜 안돼는지*/
     public EditJobSearchDTO selectEditJobSearch(int noticeCode) {
 
         return jobSearchMapper.selectEditJobSearch(noticeCode);
+    }
+
+
+    public String updatePostJobSearch(PostDTO postDTO) {
+        int result = jobSearchMapper.updatePostJobSearch(postDTO);
+
+        String response = "게시성공";
+
+        if(result <= 0 )
+            response = "게시 실패";
+
+        return response;
     }
 }

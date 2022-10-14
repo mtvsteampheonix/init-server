@@ -12,11 +12,10 @@ package com.px.init.jobsearch.controller;/*
  */
 
 import com.px.init.common.dto.ResponseDTO;
-import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
+import com.px.init.jobsearch.model.dto.PostDTO;
 import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
 import com.px.init.jobsearch.model.service.JobSearchService;
 import com.px.init.member.model.dto.MemberDTO;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,5 +100,12 @@ public class JobSearchController {
     public ResponseEntity<ResponseDTO> selectEditJobSearch(@PathVariable int noticeCode){
         System.out.println("getmapping test: " +noticeCode);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "구직공고수정용 데이터 Get성공", jobSearchService.selectEditJobSearch(noticeCode)));
+    }
+
+    /*게시상태변경 */
+    @PutMapping("")
+    public ResponseEntity<ResponseDTO> updatePostJobSearch(@RequestBody PostDTO postDTO){
+        System.out.println("put요청 확인"+postDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "게시상태 변경", jobSearchService.updatePostJobSearch(postDTO)));
     }
 }
