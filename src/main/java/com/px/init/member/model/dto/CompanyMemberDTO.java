@@ -21,7 +21,7 @@ public class CompanyMemberDTO {
     private String memberName;
     private String email;
     private String phone;
-    private int registNumber;
+    private Long registNumber;
     private String comName;
     private String comUrl;
     private java.sql.Date signupDate;
@@ -30,7 +30,7 @@ public class CompanyMemberDTO {
     public CompanyMemberDTO() {
     }
 
-    public CompanyMemberDTO(Integer memberCodePk, String memberId, String memberPw, String memberName, String email, String phone, int registNumber, String comName, String comUrl, Date signupDate, EntMemberDTO entMember) {
+    public CompanyMemberDTO(Integer memberCodePk, String memberId, String memberPw, String memberName, String email, String phone, Long registNumber, String comName, String comUrl, Date signupDate, EntMemberDTO entMember) {
         this.memberCodePk = memberCodePk;
         this.memberId = memberId;
         this.memberPw = memberPw;
@@ -92,11 +92,11 @@ public class CompanyMemberDTO {
         this.phone = phone;
     }
 
-    public int getRegistNumber() {
+    public Long getRegistNumber() {
         return registNumber;
     }
 
-    public void setRegistNumber(int registNumber) {
+    public void setRegistNumber(Long registNumber) {
         this.registNumber = registNumber;
     }
 
@@ -135,13 +135,13 @@ public class CompanyMemberDTO {
     @Override
     public String toString() {
         return "CompanyMemberDTO{" +
-                "memberCodePk='" + memberCodePk + '\'' +
+                "memberCodePk=" + memberCodePk +
                 ", memberId='" + memberId + '\'' +
                 ", memberPw='" + memberPw + '\'' +
                 ", memberName='" + memberName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", registNumber='" + registNumber + '\'' +
+                ", registNumber=" + registNumber +
                 ", comName='" + comName + '\'' +
                 ", comUrl='" + comUrl + '\'' +
                 ", signupDate=" + signupDate +
