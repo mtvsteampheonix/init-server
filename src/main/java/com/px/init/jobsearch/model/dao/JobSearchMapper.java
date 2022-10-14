@@ -11,10 +11,7 @@ package com.px.init.jobsearch.model.dao;/*
  *
  */
 
-import com.px.init.jobsearch.model.dto.EditJobSearchDTO;
-import com.px.init.jobsearch.model.dto.JobSearchDetailsDTO;
-import com.px.init.jobsearch.model.dto.JobSearchListDTO;
-import com.px.init.jobsearch.model.dto.RegistJobSearchDTO;
+import com.px.init.jobsearch.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -38,4 +35,6 @@ public  interface JobSearchMapper {
     int deleteJobSearch(int noticeCode);
 
     EditJobSearchDTO selectEditJobSearch(int noticeCode);
+
+    int updatePostJobSearch(PostDTO postDTO);
 }
