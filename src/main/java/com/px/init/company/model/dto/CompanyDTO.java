@@ -21,7 +21,7 @@ public class CompanyDTO {
     private String comIntro;
     private String comName;
     private String RepName;
-    private int registNumber;
+    private Long registNumber;
     private char isApproved;
     private char isRevealed;
     private String comUrl;
@@ -29,7 +29,7 @@ public class CompanyDTO {
     public CompanyDTO() {
     }
 
-    public CompanyDTO(int companyCodePk, Integer numEmp, String comAddress, Integer avgSalary, String benefits, String comIntro, String comName, String repName, int registNumber, char isApproved, char isRevealed, String comUrl) {
+    public CompanyDTO(int companyCodePk, Integer numEmp, String comAddress, Integer avgSalary, String benefits, String comIntro, String comName, String repName, Long registNumber, char isApproved, char isRevealed, String comUrl) {
         this.companyCodePk = companyCodePk;
         this.numEmp = numEmp;
         this.comAddress = comAddress;
@@ -108,11 +108,11 @@ public class CompanyDTO {
         RepName = repName;
     }
 
-    public int getRegistNumber() {
+    public Long getRegistNumber() {
         return registNumber;
     }
 
-    public void setRegistNumber(int registNumber) {
+    public void setRegistNumber(Long registNumber) {
         this.registNumber = registNumber;
     }
 
