@@ -1,8 +1,9 @@
 ## 🏢 INIT
 IT 인력 채용 서비스 “IN IT”은 IT 인력의 채용을 돕는 서비스로, 인재 채용을 원하는 IT 기업들과 IT 인력들의 채용 과정을 지원해주는 서비스입니다.
+![init 소개](https://user-images.githubusercontent.com/85207194/207536115-4151e2da-f58a-44f0-b3d4-645c6cbf28ca.png)
+
 ## ✅기술스택
 ![init 기술](https://user-images.githubusercontent.com/85207194/207534445-a62da1bb-c459-4f3b-a541-3b7cc51f1c01.png)
-
 ## ✅시스템 아키텍쳐
 ![init 아키텍쳐](https://user-images.githubusercontent.com/85207194/207520309-40e0cf0f-4546-495a-98d9-cbaebe48312f.png)
 ## ✅브랜치 전략
